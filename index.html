@@ -3,67 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบประเมินพลังสุขภาพจิต (RQ 20 ข้อ)</title>
+    <title>แบบประเมินพลังสุขภาพจิต (RQ) - วิทยาลัยการอาชีพเวียงเชียงรุ้ง</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f4f6f8; color: #333; line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1, h2 { text-align: center; color: #2c3e50; }
-        .warning-box { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-size: 0.9em; }
-        .instruction { margin-bottom: 20px; font-style: italic; color: #555; }
-        .question-group { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .question-text { font-weight: bold; margin-bottom: 10px; display: block; }
-        .options label { display: inline-block; margin-right: 15px; cursor: pointer; }
-        .btn-submit { display: block; width: 100%; padding: 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; transition: background 0.3s; }
-        .btn-submit:hover { background-color: #218838; }
+        :root {
+            --primary-color: #007bff; /* Blue */
+            --secondary-color: #f0f8ff; /* AliceBlue */
+            --text-color: #333;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--secondary-color);
+            background-image: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--white);
+            width: 90%;
+            max-width: 700px;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* --- Welcome Screen --- */
+        .welcome-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
         
-        /* Result Section */
-        #resultSection { display: none; margin-top: 30px; border-top: 2px solid #28a745; padding-top: 20px; }
-        .score-card { background: #e9ecef; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .score-title { font-weight: bold; color: #0056b3; }
-        .score-val { float: right; font-weight: bold; }
-        .advice { font-size: 0.9em; margin-top: 5px; color: #555; }
-        .highlight { color: #d9534f; font-weight: bold; }
+        .project-info {
+            background-color: #eef7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.95rem;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .project-info strong {
+            color: #0056b3;
+        }
+
+        .instruction {
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-family: 'Prompt', sans-serif;
+            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* --- Quiz Screen --- */
+        .quiz-screen {
+            display: none;
+            text-align: left;
+        }
+
+        .progress-bar-container {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-color);
+            background-color: #f8fbff;
+        }
+
+        .option-card.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Hide actual radio buttons */
+        input[type="radio"] {
+            display: none;
+        }
+
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            padding: 10px 25px;
+            font-size: 1rem;
+        }
+
+        /* --- Result Screen --- */
+        .result-screen {
+            display: none;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 20px rgba(0,123,255,0.4);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .result-details {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #ccc;
+        }
+        
+        .detail-card.good { border-left-color: #28a745; }
+        .detail-card.normal { border-left-color: #ffc107; }
+        .detail-card.low { border-left-color: #dc3545; }
+
+        .advice-box {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #0d47a1;
+            margin-top: 5px;
+        }
+
+        /* Fade Animation */
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .container { padding: 25px; width: 95%; }
+            .question-text { font-size: 1.2rem; }
+            .btn { width: 100%; }
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <h1>แบบประเมินพลังสุขภาพจิต (RQ)</h1>
-    
-    <div class="warning-box">
-        <strong>⚠️ ข้อควรระวัง:</strong> แบบประเมินนี้เป็นเพียงเครื่องมือตรวจสอบต้นทุนทางจิตใจเบื้องต้นเพื่อการพัฒนาตนเอง <strong>ไม่ใช่เครื่องมือวินิจฉัยทางการแพทย์</strong> หากท่านมีความเครียดสูงหรือรู้สึกไม่ไหว โปรดปรึกษาจิตแพทย์หรือผู้เชี่ยวชาญ
+    <div id="welcomeScreen" class="welcome-header fade-in">
+        <h1>แบบประเมินสุขภาพจิตเบื้องต้น (RQ)</h1>
+        <p style="color: #777;">Resilience Quotient Test</p>
+        
+        <div class="project-info">
+            <p><strong>เว็บไซต์นี้เป็นส่วนหนึ่งของ Final Project</strong><br>
+            วิทยาลัยการอาชีพเวียงเชียงรุ้ง</p>
+            <p><strong>จัดทำโดย:</strong><br>
+            1. นายพิภพ ย่างก้าวไกล<br>
+            2. นายศุภกานต์ บุญแสง<br>
+            3. นายสุทธิเทพ คำโขง</p>
+            <p><strong>วัตถุประสงค์:</strong> เพื่อให้ผู้เข้ารับบริการได้ตระหนักรู้ถึงความสำคัญของสุขภาพจิตเบื้องต้น และประเมินความสามารถในการปรับตัวและฟื้นตัวทางอารมณ์</p>
+        </div>
+
+        <div style="background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; font-size: 0.85rem; margin-bottom: 20px;">
+            ⚠️ <strong>ข้อควรระวัง:</strong> แบบประเมินนี้ไม่ใช่เครื่องมือวินิจฉัยทางการแพทย์ เหมาะสำหรับผู้มีอายุ 25-60 ปี
+        </div>
+
+        <p class="instruction">คำชี้แจง: โปรดเลือกคำตอบที่ตรงกับความรู้สึกและพฤติกรรมของท่านในรอบ <strong>3 เดือนที่ผ่านมา</strong></p>
+
+        <button class="btn" onclick="startQuiz()">เริ่มทำแบบประเมิน</button>
     </div>
 
-    <p class="instruction">
-        คำชี้แจง: ให้ท่านสำรวจความรู้สึกและพฤติกรรมของท่านในรอบ <strong>3 เดือนที่ผ่านมา</strong> และเลือกคำตอบที่ตรงกับความเป็นจริงมากที่สุด
-    </p>
-
-    <form id="rqForm">
-        <div id="questionsContainer"></div>
-        
-        <button type="button" class="btn-submit" onclick="calculateRQ()">ประมวลผลคะแนน</button>
-    </form>
-
-    <div id="resultSection">
-        <h2>ผลการประเมิน</h2>
-        <div id="totalResult" class="score-card" style="background-color: #d4edda; border: 1px solid #c3e6cb;"></div>
-        <hr>
-        <h3>รายด้าน</h3>
-        <div id="part1Result" class="score-card"></div>
-        <div id="part2Result" class="score-card"></div>
-        <div id="part3Result" class="score-card"></div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="location.reload()" style="padding: 10px 20px; cursor: pointer;">ทำแบบประเมินอีกครั้ง</button>
+    <div id="quizScreen" class="quiz-screen fade-in">
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
         </div>
+        
+        <div id="questionContainer">
+            </div>
+
+        <div class="navigation-buttons">
+            <button class="btn btn-secondary" onclick="prevQuestion()" id="prevBtn" style="display:none;">ย้อนกลับ</button>
+            </div>
+    </div>
+
+    <div id="resultScreen" class="result-screen fade-in">
+        <h2>ผลการประเมินสุขภาพจิตของคุณ</h2>
+        
+        <div class="score-circle">
+            <span class="score-number" id="totalScoreDisplay">0</span>
+            <span class="score-label">คะแนนรวมเต็ม 80</span>
+        </div>
+        
+        <p id="totalInterpretation" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 30px;"></p>
+
+        <div class="result-details">
+            <div id="detailPart1"></div>
+            <div id="detailPart2"></div>
+            <div id="detailPart3"></div>
+        </div>
+
+        <button class="btn" onclick="location.reload()">ทำแบบประเมินอีกครั้ง</button>
     </div>
 </div>
 
 <script>
-    // ข้อมูลคำถามและกลุ่มคะแนน (Positive = 1, Negative/Reverse = 2)
-    // Positive Score: ไม่จริง=1, จริงบางครั้ง=2, ค่อนข้างจริง=3, จริงมาก=4
-    // Negative Score: ไม่จริง=4, จริงบางครั้ง=3, ค่อนข้างจริง=2, จริงมาก=1
+    // ข้อมูลคำถามจากเอกสาร PDF [cite: 5]
+    // type: 'positive' (1->4), 'negative' (4->1) [cite: 9, 14]
     const questions = [
         { id: 1, text: "1. เรื่องไม่สบายใจเล็กน้อยทำให้ฉันว้าวุ่นใจนั่งไม่ติด", type: "negative" },
         { id: 2, text: "2. ฉันไม่ใส่ใจคนที่หัวเราะเยาะฉัน", type: "positive" },
@@ -75,7 +310,7 @@
         { id: 8, text: "8. ฉันไม่จดจำเรื่องเลวร้ายในอดีต", type: "positive" },
         { id: 9, text: "9. ถึงแม้ปัญหาจะหนักหนาเพียงใดชีวิตฉันก็ไม่เลวร้ายไปหมด", type: "positive" },
         { id: 10, text: "10. เมื่อมีเรื่องหนักใจ ฉันมีคนปรับทุกข์ด้วย", type: "positive" },
-        { id: 11, text: "11. จากประสบการณ์ที่ผ่านมาทำให้ฉันมั่นใจว่าจะแก้ปัญหาต่าง ๆ ที่ผ่านเข้ามาในชีวิตได้", type: "positive" },
+        { id: 11, text: "11. จากประสบการณ์ที่ผ่านมาทำให้ฉันมั่นใจว่าจะแก้ปัญหาต่าง ๆ ได้", type: "positive" },
         { id: 12, text: "12. ฉันมีครอบครัวและคนใกล้ชิดเป็นกำลังใจ", type: "positive" },
         { id: 13, text: "13. ฉันมีแผนการที่จะทำให้ชีวิตก้าวไปข้างหน้า", type: "positive" },
         { id: 14, text: "14. เมื่อมีปัญหาวิกฤตเกิดขึ้น ฉันรู้สึกว่าตัวเองไร้ความสามารถ", type: "negative" },
@@ -87,131 +322,168 @@
         { id: 20, text: "20. ฉันชอบฟังความคิดเห็นที่แตกต่างจากฉัน", type: "positive" }
     ];
 
-    const container = document.getElementById('questionsContainer');
+    let currentQuestionIndex = 0;
+    let answers = new Array(20).fill(0); // เก็บค่าดิบที่เลือก (1-4)
 
-    // สร้างคำถาม
-    questions.forEach((q, index) => {
-        const div = document.createElement('div');
-        div.className = 'question-group';
-        div.innerHTML = `
-            <span class="question-text">${q.text}</span>
-            <div class="options">
-                <label><input type="radio" name="q${q.id}" value="1" required> ไม่จริง</label>
-                <label><input type="radio" name="q${q.id}" value="2"> จริงบางครั้ง</label>
-                <label><input type="radio" name="q${q.id}" value="3"> ค่อนข้างจริง</label>
-                <label><input type="radio" name="q${q.id}" value="4"> จริงมาก</label>
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const questionContainer = document.getElementById('questionContainer');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+
+    function startQuiz() {
+        welcomeScreen.style.display = 'none';
+        quizScreen.style.display = 'block';
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        
+        // อัปเดต Progress Bar
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+
+        // สร้าง HTML คำถาม
+        questionContainer.innerHTML = `
+            <div class="question-text fade-in">${q.text}</div>
+            <div class="options-grid fade-in">
+                ${createOption(q.id, 1, "ไม่จริง")}
+                ${createOption(q.id, 2, "จริงบางครั้ง")}
+                ${createOption(q.id, 3, "ค่อนข้างจริง")}
+                ${createOption(q.id, 4, "จริงมาก")}
             </div>
         `;
-        container.appendChild(div);
-    });
 
-    function calculateRQ() {
+        // ตรวจสอบว่ามีคำตอบเดิมไหม (กรณีย้อนกลับมา)
+        if (answers[currentQuestionIndex] !== 0) {
+            const selectedOption = document.querySelector(`.option-card[onclick*="selectAnswer(${answers[currentQuestionIndex]})"]`);
+            if(selectedOption) selectedOption.classList.add('selected');
+        }
+
+        // จัดการปุ่มย้อนกลับ
+        prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'block';
+    }
+
+    function createOption(qId, val, text) {
+        return `
+            <div class="option-card" onclick="selectAnswer(${val})">
+                <input type="radio" name="q${qId}" value="${val}">
+                <span>${text}</span>
+            </div>
+        `;
+    }
+
+    function selectAnswer(val) {
+        answers[currentQuestionIndex] = val;
+        
+        // Visual feedback
+        const cards = document.querySelectorAll('.option-card');
+        cards.forEach(card => card.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+
+        // Delay เล็กน้อยก่อนไปข้อถัดไป
+        setTimeout(() => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                calculateResult();
+            }
+        }, 300);
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            renderQuestion();
+        }
+    }
+
+    function calculateResult() {
         let scores = [];
-        let completed = true;
-
-        // ดึงค่าและคำนวณคะแนน
-        for (let i = 1; i <= 20; i++) {
-            const radios = document.getElementsByName(`q${i}`);
-            let val = 0;
-            for (const radio of radios) {
-                if (radio.checked) {
-                    val = parseInt(radio.value);
-                    break;
-                }
-            }
-            if (val === 0) {
-                completed = false;
-                break;
-            }
-
-            // Logic การให้คะแนน (กลับด้านสำหรับข้อลบ)
-            const qType = questions[i-1].type;
-            let finalScore = val;
-            if (qType === 'negative') {
-                // Negative: 1->4, 2->3, 3->2, 4->1
-                if(val === 1) finalScore = 4;
-                else if(val === 2) finalScore = 3;
-                else if(val === 3) finalScore = 2;
-                else if(val === 4) finalScore = 1;
+        
+        // คำนวณคะแนนตามเงื่อนไข (Positive vs Negative) [cite: 14-18]
+        for (let i = 0; i < 20; i++) {
+            let rawVal = answers[i];
+            let finalScore = rawVal;
+            
+            if (questions[i].type === 'negative') {
+                // กลับคะแนน: 1->4, 2->3, 3->2, 4->1
+                if(rawVal === 1) finalScore = 4;
+                else if(rawVal === 2) finalScore = 3;
+                else if(rawVal === 3) finalScore = 2;
+                else if(rawVal === 4) finalScore = 1;
             }
             scores.push(finalScore);
         }
 
-        if (!completed) {
-            alert("กรุณาตอบคำถามให้ครบทุกข้อ");
-            return;
+        // รวมคะแนนรายด้าน [cite: 21]
+        // 1. อารมณ์ (อึด): ข้อ 1-10
+        const p1 = scores.slice(0, 10).reduce((a, b) => a + b, 0);
+        // 2. กำลังใจ (ฮึด): ข้อ 11-15
+        const p2 = scores.slice(10, 15).reduce((a, b) => a + b, 0);
+        // 3. จัดการปัญหา (สู้): ข้อ 16-20
+        const p3 = scores.slice(15, 20).reduce((a, b) => a + b, 0);
+        
+        const total = p1 + p2 + p3;
+
+        showResult(p1, p2, p3, total);
+    }
+
+    function showResult(p1, p2, p3, total) {
+        quizScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        // แสดงผลรวม
+        document.getElementById('totalScoreDisplay').innerText = total;
+        document.getElementById('totalInterpretation').innerHTML = interpretTotal(total);
+
+        // แสดงผลรายด้าน
+        // ด้านอารมณ์ (อึด) <27 ต่ำ, 27-34 ปกติ, >34 สูง [cite: 21]
+        renderDetail('detailPart1', 'ด้านความทนทานทางอารมณ์ (อึด)', p1, 27, 34, 40, 
+            'แนะนำ: ฝึกควบคุมอารมณ์ ฝึกหายใจช้าๆ ลึกๆ เมื่อเครียด และมองโลกในแง่ดี');
+
+        // ด้านกำลังใจ (ฮึด) <14 ต่ำ, 14-19 ปกติ, >19 สูง [cite: 21]
+        renderDetail('detailPart2', 'ด้านกำลังใจ (ฮึด)', p2, 14, 19, 20, 
+            'แนะนำ: สร้างกำลังใจให้ตนเอง คิดถึงคนที่รักเรา และระลึกเสมอว่าเราเคยผ่านเรื่องยากๆ มาแล้ว');
+
+        // ด้านจัดการปัญหา (สู้) <13 ต่ำ, 13-18 ปกติ, >18 สูง [cite: 21]
+        renderDetail('detailPart3', 'ด้านการจัดการกับปัญหา (สู้)', p3, 13, 18, 20, 
+            'แนะนำ: ฝึกคิดหาทางออกให้หลากหลาย หาข้อดีข้อเสีย และเตรียมแผนสำรองไว้เสมอ');
+    }
+
+    function interpretTotal(score) {
+        if (score < 55) return "<span style='color:#dc3545'>พลังสุขภาพจิตต่ำกว่าเกณฑ์ปกติ</span>";
+        if (score <= 69) return "<span style='color:#28a745'>พลังสุขภาพจิตอยู่ในเกณฑ์ปกติ</span>";
+        return "<span style='color:#007bff'>พลังสุขภาพจิตสูงกว่าเกณฑ์ปกติ (เยี่ยมมาก!)</span>";
+    }
+
+    function renderDetail(elemId, title, score, lowCut, highCut, max, adviceText) {
+        let statusClass = "normal";
+        let statusText = "ปกติ";
+        let advice = "";
+
+        if (score < lowCut) {
+            statusClass = "low";
+            statusText = "ต่ำกว่าเกณฑ์";
+            advice = `<div class='advice-box'>${adviceText}</div>`; // แสดงคำแนะนำเฉพาะเมื่อต่ำกว่าเกณฑ์ [cite: 29]
+        } else if (score > highCut) {
+            statusClass = "good";
+            statusText = "สูงกว่าเกณฑ์";
+            advice = `<div class='advice-box' style='background-color:#d4edda; color:#155724;'>ท่านมีศักยภาพด้านนี้ดีเยี่ยม รักษาไว้ให้ดี</div>`;
         }
 
-        // แบ่งหมวดหมู่คะแนน
-        // ด้าน 1: อารมณ์ (ข้อ 1-10)
-        const part1Score = scores.slice(0, 10).reduce((a, b) => a + b, 0);
-        // ด้าน 2: กำลังใจ (ข้อ 11-15)
-        const part2Score = scores.slice(10, 15).reduce((a, b) => a + b, 0);
-        // ด้าน 3: จัดการปัญหา (ข้อ 16-20)
-        const part3Score = scores.slice(15, 20).reduce((a, b) => a + b, 0);
-        
-        const totalScore = part1Score + part2Score + part3Score;
-
-        displayResult(part1Score, part2Score, part3Score, totalScore);
-    }
-
-    function displayResult(p1, p2, p3, total) {
-        const resultDiv = document.getElementById('resultSection');
-        resultDiv.style.display = 'block';
-
-        // เกณฑ์แปลผล (Criteria)
-        // Part 1: <27 (Low), 27-34 (Normal), >34 (High)
-        // Part 2: <14 (Low), 14-19 (Normal), >19 (High)
-        // Part 3: <13 (Low), 13-18 (Normal), >18 (High)
-        // Total: <55 (Low), 55-69 (Normal), >69 (High)
-
-        document.getElementById('totalResult').innerHTML = `
-            <div class="score-title">คะแนนรวมพลังสุขภาพจิต (RQ) <span class="score-val">${total} / 80</span></div>
-            <div>ผลการประเมิน: <strong>${interpret(total, 55, 69)}</strong></div>
-            <div class="advice">${getAdvice('total', total, 55, 69)}</div>
+        document.getElementById(elemId).className = `detail-card ${statusClass}`;
+        document.getElementById(elemId).innerHTML = `
+            <strong>${title}</strong>
+            <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                <span>คะแนน: ${score}/${max}</span>
+                <span>ผล: ${statusText}</span>
+            </div>
+            ${advice}
         `;
-
-        document.getElementById('part1Result').innerHTML = `
-            <div class="score-title">1. ด้านความทนทานทางอารมณ์ (อึด) <span class="score-val">${p1} / 40</span></div>
-            <div>ผลการประเมิน: <strong>${interpret(p1, 27, 34)}</strong></div>
-            <div class="advice">${getAdvice('part1', p1, 27, 34)}</div>
-        `;
-
-        document.getElementById('part2Result').innerHTML = `
-            <div class="score-title">2. ด้านกำลังใจ (ฮึด) <span class="score-val">${p2} / 20</span></div>
-            <div>ผลการประเมิน: <strong>${interpret(p2, 14, 19)}</strong></div>
-            <div class="advice">${getAdvice('part2', p2, 14, 19)}</div>
-        `;
-
-        document.getElementById('part3Result').innerHTML = `
-            <div class="score-title">3. ด้านการจัดการกับปัญหา (สู้) <span class="score-val">${p3} / 20</span></div>
-            <div>ผลการประเมิน: <strong>${interpret(p3, 13, 18)}</strong></div>
-            <div class="advice">${getAdvice('part3', p3, 13, 18)}</div>
-        `;
-        
-        // Scroll to result
-        resultDiv.scrollIntoView({behavior: "smooth"});
-    }
-
-    function interpret(score, lowCutoff, highCutoff) {
-        if (score < lowCutoff) return "<span style='color:red'>ต่ำกว่าเกณฑ์ปกติ</span>";
-        if (score <= highCutoff) return "<span style='color:green'>เกณฑ์ปกติ</span>";
-        return "<span style='color:blue'>สูงกว่าเกณฑ์ปกติ</span>";
-    }
-
-    function getAdvice(type, score, lowCutoff, highCutoff) {
-        if (score > highCutoff) return "ท่านมีพลังสุขภาพจิตดีเยี่ยม ขอให้รักษาศักยภาพด้านนี้ไว้";
-        
-        if (score >= lowCutoff) {
-             return "ท่านสามารถพัฒนาตนเองโดยการแสวงหาความรู้เพื่อเสริมสร้างพลังสุขภาพจิตให้คงอยู่ เช่น การฝึกทักษะในการแก้ไขปัญหา หรือการสร้างกำลังใจให้ตนเอง";
-        }
-
-        // คำแนะนำสำหรับกลุ่มต่ำกว่าเกณฑ์
-        if (type === 'part1') return "แนะนำ: ฝึกควบคุมอารมณ์ตนเอง ให้มีสติและสงบ ฝึกหายใจเข้าออกช้าๆ ลึกๆ เมื่อเผชิญความเครียด หรือฝึกมองส่วนดีๆ ที่มีอยู่";
-        if (type === 'part2') return "แนะนำ: คิดถึงสิ่งดีๆ ที่ท่านมีอยู่ เช่น คนที่รักและห่วงใย ระลึกว่าเคยผ่านความยากลำบากมาได้ หมั่นพูดให้กำลังใจตนเองว่า 'เราต้องผ่านไปได้'";
-        if (type === 'part3') return "แนะนำ: ฝึกคิดหาทางออกเมื่อเจอปัญหา เริ่มจากปัญหาเล็กๆ หาทางออกให้มากที่สุด เปรียบเทียบข้อดีข้อเสีย และเตรียมแผนสำรองไว้";
-        
-        return "ควรหมั่นสำรวจใจและฝึกฝนทักษะการจัดการความเครียด";
     }
 </script>
 
