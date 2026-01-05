@@ -3,209 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>อารีแคร์ (Are-Care) - แบบประเมินสุขภาพจิต</title>
+    <title>Are-Care | อารีแคร์ - พื้นที่ปลอดภัยเพื่อใจคุณ</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #3498db;
-            --soft-blue: #ebf5fb;
-            --dark-blue: #2980b9;
+            --primary: #3498db;
+            --secondary: #eef7fe;
+            --accent: #f39c12;
+            --text-main: #2c3e50;
             --white: #ffffff;
-            --gray: #7f8c8d;
-            --success: #27ae60;
-            --warning: #f1c40f;
-            --danger: #e74c3c;
+            --glass: rgba(255, 255, 255, 0.9);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; transition: all 0.3s ease; }
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: var(--soft-blue);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-main);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow-x: hidden;
             min-height: 100vh;
         }
 
-        .container {
-            background: var(--white);
-            max-width: 700px;
-            width: 95%;
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+
+        /* Glassmorphism Effect */
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        /* หน้า Welcome */
-        .welcome-title { color: var(--primary-blue); font-size: 2.5rem; margin-bottom: 5px; }
-        .welcome-sub { color: var(--gray); font-size: 1.1rem; margin-bottom: 30px; }
-        .info-box {
-            background: #f8fbff;
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid var(--primary-blue);
-            text-align: left;
-            margin-bottom: 30px;
-        }
-        .team-info { font-size: 0.9rem; color: #555; margin-top: 20px; }
-
-        /* ระบบประเมิน */
         .hidden { display: none; }
-        .progress-container { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin-bottom: 30px; }
-        .progress-bar { height: 100%; background: var(--primary-blue); width: 0%; border-radius: 5px; transition: 0.4s; }
+
+        /* Header & Welcome */
+        h1.logo { color: var(--primary); font-size: 3rem; margin: 0; font-weight: 700; letter-spacing: -1px; }
+        .subtitle { color: var(--gray); margin-bottom: 30px; }
         
-        .question-box { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Mood Tracker */
+        .mood-box { margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.5); border-radius: 15px; }
+        .mood-btn { font-size: 2rem; border: none; background: none; cursor: pointer; filter: grayscale(1); }
+        .mood-btn:hover, .mood-btn.active { filter: grayscale(0); transform: scale(1.2); }
 
-        .options-container { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
-        .option-btn {
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 1.05rem;
-            background: white;
-        }
-        .option-btn:hover { background: var(--soft-blue); border-color: var(--primary-blue); color: var(--dark-blue); }
-
-        .nav-btns { display: flex; justify-content: space-between; margin-top: 30px; }
+        /* Buttons */
         .btn {
-            padding: 12px 30px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: 0.3s;
+            background: var(--primary); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-size: 1.1rem;
+            cursor: pointer; font-weight: 700; margin: 10px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
-        .btn-primary { background: var(--primary-blue); color: white; }
-        .btn-primary:hover { background: var(--dark-blue); transform: scale(1.05); }
-        .btn-outline { background: transparent; border: 1px solid var(--gray); color: var(--gray); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
+        .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
 
-        /* ผลลัพธ์ */
-        .result-score { font-size: 3rem; font-weight: bold; color: var(--primary-blue); }
-        .result-status { font-size: 1.5rem; margin: 15px 0; font-weight: bold; }
-        .hotline {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 15px 25px;
-            background: var(--danger);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: bold;
+        /* Survey Engine */
+        .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin-bottom: 25px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+        .option-item {
+            background: white; border: 2px solid #f0f0f0; border-radius: 15px;
+            padding: 18px; margin: 10px 0; cursor: pointer; text-align: left;
         }
+        .option-item:hover { border-color: var(--primary); background: var(--secondary); }
+
+        /* Chatbot Widget */
+        #chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 9999; }
+        #chat-btn {
+            width: 65px; height: 65px; background: var(--primary); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2); font-size: 28px;
+        }
+        #chat-window {
+            position: absolute; bottom: 80px; right: 0; width: 320px; height: 450px;
+            background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; overflow: hidden; transform-origin: bottom right;
+        }
+        .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: bold; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 85%; font-size: 0.9rem; line-height: 1.4; }
+        .msg-bot { background: var(--secondary); align-self: flex-start; }
+        .msg-user { background: var(--primary); color: white; align-self: flex-end; }
+        .chat-footer { padding: 10px; border-top: 1px solid #eee; display: flex; }
+        .chat-input { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 20px; outline: none; }
+
+        /* Team Footer */
+        .footer-team { font-size: 0.85rem; color: #7f8c8d; margin-top: 40px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="welcome-screen">
-        <h1 class="welcome-title">อารีแคร์ (Are-Care)</h1>
-        <p class="welcome-sub">แบบประเมินสุขภาพจิตและความฉลาดทางอารมณ์</p>
+    <div id="screen-welcome" class="card">
+        <h1 class="logo">Are-Care</h1>
+        <p class="subtitle">อารีแคร์ • พื้นที่ปลอดภัยเพื่อใจคุณ</p>
         
-        <div class="info-box">
-            <strong>วัตถุประสงค์:</strong> เว็บไซต์นี้จัดทำขึ้นเพื่อให้ผู้เข้ารับบริการได้ตระหนักรู้ถึงความสำคัญของสุขภาพจิตเบื้องต้น และสามารถประเมินสภาวะอารมณ์ของตนเองได้อย่างถูกต้อง
+        <div class="mood-box">
+            <p>วันนี้คุณเป็นยังไงบ้าง? ลองเลือกบอกเรานะ</p>
+            <button class="mood-btn" onclick="selectMood(this, 'ดีใจ')">😊</button>
+            <button class="mood-btn" onclick="selectMood(this, 'เฉยๆ')">😐</button>
+            <button class="mood-btn" onclick="selectMood(this, 'เศร้า')">😔</button>
+            <button class="mood-btn" onclick="selectMood(this, 'เครียด')">😫</button>
         </div>
 
-        <div class="options-container">
-            <button class="btn btn-primary" onclick="startSurvey('mh')">เริ่มแบบประเมินสุขภาพจิต (PHQ-9)</button>
-            <button class="btn btn-primary" onclick="startSurvey('eq')">เริ่มแบบประเมินความฉลาดทางอารมณ์ (EQ)</button>
+        <div style="text-align: left; margin: 25px 0; border-left: 4px solid var(--primary); padding-left: 15px;">
+            <p><strong>วัตถุประสงค์:</strong> เพื่อประเมินสุขภาพจิตและบุคลิกภาพเบื้องต้น ให้คุณเข้าใจตัวเองมากขึ้น</p>
         </div>
 
-        <div class="team-info">
-            <p><strong>Final Project - วิทยาลัยการอาชีพเวียงเชียงรุ้ง</strong></p>
-            <p>จัดทำโดย: นายพิภพ ย่างก้าวไกล, นายศุภกานต์ บุญแสง, นายสุทธิเทพ คำโขง</p>
+        <div style="display: flex; flex-direction: column;">
+            <button class="btn" onclick="startSurvey('mh')">แบบประเมินสุขภาพจิต (PHQ-9)</button>
+            <button class="btn btn-outline" onclick="startSurvey('eq')">ประเมินความฉลาดทางอารมณ์ (EQ)</button>
+            <button class="btn btn-outline" onclick="startSurvey('mbti')">แบบทดสอบบุคลิกภาพ (MBTI)</button>
+        </div>
+
+        <div class="footer-team">
+            <p><strong>วิทยาลัยการอาชีพเวียงเชียงรุ้ง</strong><br>
+            โดย: นายพิภพ ย่างก้าวไกล, นายศุภกานต์ บุญแสง, นายสุทธิเทพ คำโขง</p>
         </div>
     </div>
 
-    <div id="survey-screen" class="hidden">
-        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-        <div id="question-area" class="question-box">
-            <h2 id="question-text">คำถามจะขึ้นตรงนี้</h2>
-            <div id="options-list" class="options-container"></div>
-        </div>
-        <div class="nav-btns">
-            <button class="btn btn-outline" id="prev-btn" onclick="prevQuestion()">ย้อนกลับ</button>
-            <span id="q-counter" style="color: #888; align-self: center;">1/9</span>
+    <div id="screen-survey" class="card hidden">
+        <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+        <h3 id="question-text">Loading...</h3>
+        <div id="options-list"></div>
+        <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+            <button class="btn btn-outline" onclick="goBack()" id="back-btn">ย้อนกลับ</button>
+            <span id="step-count" style="align-self: center;">1 / 10</span>
         </div>
     </div>
 
-    <div id="result-screen" class="hidden">
-        <h2>ผลการประเมินของคุณ</h2>
-        <div class="result-score" id="final-score">0</div>
-        <div class="result-status" id="result-status">ปกติ</div>
-        <p id="result-desc">ข้อความแนะนำจะแสดงตรงนี้</p>
+    <div id="screen-result" class="card hidden">
+        <h2 id="res-title">ผลการประเมิน</h2>
+        <div id="res-score" style="font-size: 3rem; font-weight: bold; color: var(--primary);">0</div>
+        <div id="res-tag" style="font-size: 1.5rem; margin: 10px 0;"></div>
+        <p id="res-desc" style="line-height: 1.6;"></p>
         
-        <a href="tel:1323" class="hotline">📞 สายด่วนสุขภาพจิต 1323 (โทรฟรี)</a>
-        <br><br>
-        <button class="btn btn-outline" onclick="location.reload()">กลับหน้าแรก</button>
+        <div style="margin-top: 30px; display: flex; flex-direction: column;">
+            <button class="btn" onclick="location.reload()">ทำแบบทดสอบอื่น</button>
+            <a href="tel:1323" class="btn" style="background: #e74c3c; text-decoration: none;">📞 สายด่วนสุขภาพจิต 1323</a>
+        </div>
     </div>
 </div>
 
+<div id="chat-widget">
+    <div id="chat-window" class="hidden">
+        <div class="chat-header">น้องอารี เพื่อนคู่คิด ✨</div>
+        <div class="chat-body" id="chat-body">
+            <div class="msg msg-bot">สวัสดีครับ ผมน้องอารีนะ วันนี้มีอะไรไม่สบายใจพิมพ์ระบายกับผมได้เลยนะครับ 😊</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" class="chat-input" placeholder="พิมพ์ข้อความที่นี่..." onkeypress="if(event.key==='Enter') sendChat()">
+            <button onclick="sendChat()" style="border:none; background:none; color:var(--primary); cursor:pointer;">ส่ง</button>
+        </div>
+    </div>
+    <div id="chat-btn" onclick="toggleChat()">💬</div>
+</div>
+
 <script>
-    // ข้อมูลคำถาม
-    const surveys = {
+    const questions = {
         mh: [
-            { q: "เบื่อ ทำอะไรก็ไม่เพลิดเพลิน", options: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], scores: [0, 1, 2, 3] },
-            { q: "ไม่สบายใจ ซึมเศร้า หรือท้อแท้", options: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], scores: [0, 1, 2, 3] },
-            { q: "หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป", options: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], scores: [0, 1, 2, 3] },
-            { q: "เหนื่อยง่าย หรือไม่ค่อยมีแรง", options: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], scores: [0, 1, 2, 3] },
-            { q: "เบื่ออาหาร หรือกินมากเกินไป", options: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], scores: [0, 1, 2, 3] }
+            { q: "เบื่อ ทำอะไรก็ไม่เพลิดเพลิน", opts: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], score: [0, 1, 2, 3] },
+            { q: "ไม่สบายใจ ซึมเศร้า หรือท้อแท้", opts: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], score: [0, 1, 2, 3] },
+            { q: "หลับยาก หรือหลับมากเกินไป", opts: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], score: [0, 1, 2, 3] },
+            { q: "รู้สึกเหนื่อยง่าย หรือไม่ค่อยมีแรง", opts: ["ไม่มีเลย", "มีบางวัน", "บ่อย", "ทุกวัน"], score: [0, 1, 2, 3] }
         ],
         eq: [
-            { q: "ฉันรู้ตัวเสมอว่ากำลังโกรธหรือเสียใจ", options: ["ไม่จริง", "จริงบางครั้ง", "จริง", "จริงที่สุด"], scores: [1, 2, 3, 4] },
-            { q: "ฉันสามารถระงับอารมณ์โกรธได้ดี", options: ["ไม่จริง", "จริงบางครั้ง", "จริง", "จริงที่สุด"], scores: [1, 2, 3, 4] },
-            { q: "ฉันยอมรับข้อบกพร่องของตัวเองได้", options: ["ไม่จริง", "จริงบางครั้ง", "จริง", "จริงที่สุด"], scores: [1, 2, 3, 4] },
-            { q: "ฉันเห็นอกเห็นใจเมื่อผู้อื่นมีปัญหา", options: ["ไม่จริง", "จริงบางครั้ง", "จริง", "จริงที่สุด"], scores: [1, 2, 3, 4] },
-            { q: "ฉันมีความสุขกับการทำงานร่วมกับผู้อื่น", options: ["ไม่จริง", "จริงบางครั้ง", "จริง", "จริงที่สุด"], scores: [1, 2, 3, 4] }
+            { q: "ฉันสามารถควบคุมอารมณ์ได้เมื่อโกรธ", opts: ["ไม่จริง", "จริงบ้าง", "จริงที่สุด"], score: [1, 2, 3] },
+            { q: "ฉันเข้าใจความรู้สึกของคนอื่นเสมอ", opts: ["ไม่จริง", "จริงบ้าง", "จริงที่สุด"], score: [1, 2, 3] }
+        ],
+        mbti: [
+            { q: "คุณชอบใช้เวลาส่วนใหญ่อยู่กับใคร?", opts: ["อยู่กับเพื่อนฝูงเยอะๆ (E)", "อยู่คนเดียวเงียบๆ (I)"], type: ["E", "I"] },
+            { q: "คุณตัดสินใจจากอะไรเป็นหลัก?", opts: ["เหตุผลและความจริง (T)", "ความรู้สึกและความสัมพันธ์ (F)"], type: ["T", "F"] }
         ]
     };
 
-    let currentSurvey = [];
+    let currentType = '';
     let currentIdx = 0;
-    let userAnswers = [];
-    let surveyType = '';
+    let scores = [];
+    let mbtiTags = [];
+
+    function selectMood(el, mood) {
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        console.log("Current Mood:", mood);
+    }
 
     function startSurvey(type) {
-        surveyType = type;
-        currentSurvey = surveys[type];
+        currentType = type;
         currentIdx = 0;
-        userAnswers = [];
-        document.getElementById('welcome-screen').classList.add('hidden');
-        document.getElementById('survey-screen').classList.remove('hidden');
+        scores = [];
+        mbtiTags = [];
+        document.getElementById('screen-welcome').classList.add('hidden');
+        document.getElementById('screen-survey').classList.remove('hidden');
         renderQuestion();
     }
 
     function renderQuestion() {
-        const qData = currentSurvey[currentIdx];
-        document.getElementById('question-text').innerText = `${currentIdx + 1}. ${qData.q}`;
-        document.getElementById('q-counter').innerText = `${currentIdx + 1} / ${currentSurvey.length}`;
+        const qData = questions[currentType][currentIdx];
+        document.getElementById('question-text').innerText = qData.q;
+        document.getElementById('step-count').innerText = `${currentIdx + 1} / ${questions[currentType].length}`;
+        const list = document.getElementById('options-list');
+        list.innerHTML = '';
         
-        const optionsList = document.getElementById('options-list');
-        optionsList.innerHTML = '';
-        
-        qData.options.forEach((opt, i) => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.innerText = opt;
-            btn.onclick = () => handleAnswer(qData.scores[i]);
-            optionsList.appendChild(btn);
+        qData.opts.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+            div.innerText = opt;
+            div.onclick = () => handleAnswer(i);
+            list.appendChild(div);
         });
 
-        const progress = ((currentIdx + 1) / currentSurvey.length) * 100;
-        document.getElementById('progress-bar').style.width = progress + '%';
-        document.getElementById('prev-btn').style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
+        const progress = ((currentIdx + 1) / questions[currentType].length) * 100;
+        document.getElementById('progress').style.width = progress + '%';
+        document.getElementById('back-btn').style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
     }
 
-    function handleAnswer(score) {
-        userAnswers[currentIdx] = score;
-        if (currentIdx < currentSurvey.length - 1) {
+    function handleAnswer(optIdx) {
+        const qData = questions[currentType][currentIdx];
+        if(currentType === 'mbti') mbtiTags.push(qData.type[optIdx]);
+        else scores.push(qData.score[optIdx]);
+
+        if(currentIdx < questions[currentType].length - 1) {
             currentIdx++;
             renderQuestion();
         } else {
@@ -213,38 +231,55 @@
         }
     }
 
-    function prevQuestion() {
-        if (currentIdx > 0) {
-            currentIdx--;
-            renderQuestion();
+    function showResult() {
+        document.getElementById('screen-survey').classList.add('hidden');
+        document.getElementById('screen-result').classList.remove('hidden');
+        const scoreSum = scores.reduce((a, b) => a + b, 0);
+        
+        let title = "", tag = "", desc = "";
+        if(currentType === 'mh') {
+            title = "ผลสุขภาพจิต";
+            tag = scoreSum < 5 ? "ปกติ" : "ควรพักผ่อน";
+            desc = "วันนี้คุณเก่งมากแล้ว พยายามรักษาสุขภาพจิตแบบนี้ไว้นะครับ";
+            document.getElementById('res-score').innerText = scoreSum;
+        } else if(currentType === 'mbti') {
+            title = "บุคลิกภาพของคุณ";
+            tag = mbtiTags.join('');
+            desc = "นี่คือตัวตนที่น่าสนใจของคุณ ลองศึกษาจุดแข็งของตัวเองดูนะ!";
+            document.getElementById('res-score').innerText = tag;
         }
+        
+        document.getElementById('res-title').innerText = title;
+        document.getElementById('res-tag').innerText = tag;
+        document.getElementById('res-desc').innerText = desc;
     }
 
-    function showResult() {
-        document.getElementById('survey-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.remove('hidden');
+    // Chatbot Logic
+    function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
+    function sendChat() {
+        const input = document.getElementById('chat-input');
+        if(!input.value) return;
         
-        const total = userAnswers.reduce((a, b) => a + b, 0);
-        document.getElementById('final-score').innerText = total;
-        
-        let status = "";
-        let desc = "";
-        let color = "";
+        appendMsg(input.value, 'user');
+        const userText = input.value;
+        input.value = '';
 
-        if (surveyType === 'mh') {
-            if (total <= 4) { status = "ปกติ"; color = "var(--success)"; desc = "สุขภาพจิตของคุณอยู่ในเกณฑ์ดีเยี่ยม หมั่นดูแลใจแบบนี้ต่อไปนะคะ"; }
-            else if (total <= 9) { status = "เสี่ยงต่ำ"; color = "var(--warning)"; desc = "คุณเริ่มมีความเครียดสะสม ควรหาเวลาพักผ่อนหรือทำงานอดิเรกที่ชอบ"; }
-            else { status = "ควรปรึกษาผู้เชี่ยวชาญ"; color = "var(--danger)"; desc = "คุณมีความเสี่ยงสุขภาพจิตในระดับสูง แนะนำให้พูดคุยกับคนใกล้ชิดหรือปรึกษาแพทย์"; }
-        } else {
-            if (total >= 15) { status = "EQ สูง"; color = "var(--success)"; desc = "คุณมีการจัดการอารมณ์และปรับตัวเข้ากับสังคมได้ดีมาก"; }
-            else { status = "EQ ปกติ"; color = "var(--primary-blue)"; desc = "ความฉลาดทางอารมณ์ของคุณอยู่ในเกณฑ์มาตรฐาน พัฒนาต่อได้เรื่อยๆ ครับ"; }
-        }
-
-        document.getElementById('result-status').innerText = status;
-        document.getElementById('result-status').style.color = color;
-        document.getElementById('result-desc').innerText = desc;
+        setTimeout(() => {
+            let reply = "น้องอารีรับทราบครับ เล่าต่อได้นะ...";
+            if(userText.includes('เหนื่อย')) reply = "เหนื่อยก็พักบ้างนะ คุณทำดีที่สุดแล้วครับ 😊";
+            if(userText.includes('เครียด')) reply = "ความเครียดมันเหมือนเมฆฝนครับ เดี๋ยวท้องฟ้าก็สดใส สู้ๆ นะ!";
+            if(userText.includes('เหงา')) reply = "เหงาหรอ? น้องอารีอยู่ตรงนี้เป็นเพื่อนคุยเองนะ";
+            appendMsg(reply, 'bot');
+        }, 800);
+    }
+    function appendMsg(text, sender) {
+        const body = document.getElementById('chat-body');
+        const div = document.createElement('div');
+        div.className = `msg msg-${sender}`;
+        div.innerText = text;
+        body.appendChild(div);
+        body.scrollTop = body.scrollHeight;
     }
 </script>
-
 </body>
 </html>
