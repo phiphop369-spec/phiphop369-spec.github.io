@@ -3,254 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are-Care | อารีแคร์</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <meta name="description" content="อารีแคร์ - ระบบประเมินสุขภาพจิตออนไลน์เบื้องต้นและ AI Chatbot น้องอารี">
+    <title>Are-Care | ระบบประเมินสุขภาพจิตออนไลน์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* --- CSS STYLES --- */
         :root {
-            --blue-main: #3498db; --blue-light: #ebf5fb; --white: #ffffff;
-            --gray: #7f8c8d; --text: #2c3e50; --danger: #e74c3c;
+            --primary: #2563eb;
+            --secondary: #10b981;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-soft: #64748b;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
-        * { box-sizing: border-box; font-family: 'Sarabun', sans-serif; transition: 0.3s; }
-        body { margin: 0; background-color: #f4f7f6; color: var(--text); }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
         /* Navigation */
-        nav {
-            background: var(--white); padding: 15px 5%; display: flex; 
+        .navbar {
+            background: var(--white); padding: 1rem 10%; display: flex;
             justify-content: space-between; align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000;
         }
-        .nav-links span {
-            margin-left: 20px; cursor: pointer; font-weight: bold; color: var(--gray);
-        }
-        .nav-links span:hover, .nav-links span.active { color: var(--blue-main); }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); cursor: pointer; }
+        .nav-links { display: flex; list-style: none; gap: 1.5rem; }
+        .nav-links a { text-decoration: none; color: var(--text-soft); font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
 
-        .container { max-width: 900px; margin: 30px auto; padding: 20px; }
-        .page { display: none; animation: fadeIn 0.5s; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Content Management */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease-out; }
 
-        /* Components */
-        .card { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; }
-        .btn {
-            background: var(--blue-main); color: white; border: none; padding: 12px 25px;
-            border-radius: 50px; cursor: pointer; font-weight: bold; margin: 10px;
-        }
-        .btn:hover { transform: scale(1.05); background: #2980b9; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Chat System */
-        .chat-box {
-            height: 450px; background: #f9f9f9; border-radius: 15px; 
-            display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eee;
-        }
-        #chat-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 18px; border-radius: 20px; max-width: 80%; line-height: 1.4; position: relative; }
-        .msg-bot { background: #eee; align-self: flex-start; }
-        .msg-user { background: var(--blue-main); color: white; align-self: flex-end; }
-        .typing { font-size: 0.8rem; color: var(--gray); margin-bottom: 5px; display: none; }
-        .chat-input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; }
-        .chat-input-area input { flex: 1; border: 1px solid #ddd; padding: 10px 20px; border-radius: 30px; outline: none; }
+        /* Layout Components */
+        .container { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; }
+        .card { background: var(--white); padding: 2.5rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; }
 
-        /* Survey */
-        .opt-item {
-            background: #fff; border: 2px solid #eee; padding: 15px; margin: 10px 0;
-            border-radius: 12px; cursor: pointer; text-align: left;
+        /* Hero Section */
+        .hero { text-align: center; padding: 4rem 2rem; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--text-main); }
+        .hero-sub { font-size: 1.2rem; color: var(--text-soft); margin-bottom: 2.5rem; }
+
+        /* Buttons */
+        .btn { display: inline-block; padding: 0.8rem 2rem; border-radius: 2rem; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { border: 2px solid var(--primary); color: var(--primary); background: transparent; }
+        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+        /* Process Timeline */
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .step-card { padding: 1.5rem; border-left: 4px solid var(--primary); background: #f1f5f9; border-radius: 0 1rem 1rem 0; }
+
+        /* Survey & Chatbot UI */
+        .survey-box { margin-top: 20px; text-align: left; }
+        .option-btn { display: block; width: 100%; padding: 1rem; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; background: white; cursor: pointer; text-align: left; transition: 0.2s; }
+        .option-btn:hover { border-color: var(--primary); background: var(--bg-light); }
+        
+        .chat-window { border: 1px solid #eee; border-radius: 1rem; height: 400px; display: flex; flex-direction: column; overflow: hidden; margin-top: 2rem; }
+        .chat-messages { flex: 1; padding: 1.5rem; overflow-y: auto; background: #fcfcfc; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
+        .msg-bot { background: #e2e8f0; align-self: flex-start; }
+        .msg-user { background: var(--primary); color: white; align-self: flex-end; }
+        .chat-input-area { display: flex; padding: 1rem; border-top: 1px solid #eee; gap: 10px; background: white; }
+        .chat-input-area input { flex: 1; border: 1px solid #ddd; padding: 10px 20px; border-radius: 20px; outline: none; }
+
+        .footer { text-align: center; padding: 3rem; color: var(--text-soft); font-size: 0.9rem; }
+        .warning { border-left: 5px solid #ef4444; background: #fff5f5; padding: 1rem; margin-bottom: 2rem; border-radius: 0 1rem 1rem 0; }
+        
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 5%; flex-direction: column; gap: 1rem; }
+            .hero h1 { font-size: 2rem; }
         }
-        .opt-item:hover { border-color: var(--blue-main); background: var(--blue-light); }
-        .progress-bar { height: 8px; background: #eee; border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        #progress-fill { height: 100%; background: var(--blue-main); width: 0%; }
     </style>
 </head>
 <body>
 
-<nav>
-    <div style="font-size: 1.5rem; font-weight: bold; color: var(--blue-main);">Are-Care</div>
-    <div class="nav-links">
-        <span onclick="showPage('home')" id="link-home" class="active">หน้าหลัก</span>
-        <span onclick="showPage('survey')" id="link-survey">แบบทดสอบ</span>
-        <span onclick="showPage('chat')" id="link-chat">คุยกับน้องอารี</span>
-    </div>
-</nav>
+    <nav class="navbar">
+        <div class="logo" onclick="showPage('home')">Are-Care 💙</div>
+        <ul class="nav-links">
+            <li><a onclick="showPage('home')" id="link-home" class="active">หน้าแรก</a></li>
+            <li><a onclick="showPage('about')" id="link-about">เกี่ยวกับ</a></li>
+            <li><a onclick="showPage('process')" id="link-process">กระบวนการ</a></li>
+            <li><a onclick="showPage('features')" id="link-features">เริ่มใช้งาน</a></li>
+            <li><a onclick="showPage('contact')" id="link-contact">ติดต่อ</a></li>
+        </ul>
+    </nav>
 
-<div class="container">
-    <div id="page-home" class="page active">
-        <div class="card">
-            <h1>ยินดีต้อนรับสู่ อารีแคร์</h1>
-            <p>เว็บไซต์ประเมินสุขภาพจิตเบื้องต้นเพื่อดูแลใจคุณให้แข็งแรง</p>
-            <div style="background: var(--blue-light); padding: 20px; border-radius: 15px; margin: 20px 0;">
-                <strong>วัตถุประสงค์:</strong> เพื่อให้ผู้ใช้ได้ตระหนักรู้และสำรวจสภาวะทางจิตใจด้วยตนเองอย่างแม่นยำ
-            </div>
-            <p><strong>คณะผู้จัดทำ:</strong> นายพิภพ ย่างก้าวไกล, นายศุภกานต์ บุญแสง, นายสุทธิเทพ คำโขง</p>
-            <p>วิทยาลัยการอาชีพเวียงเชียงรุ้ง</p>
-            <button class="btn" onclick="showPage('survey')">เริ่มสำรวจใจกันเลย</button>
-        </div>
-    </div>
-
-    <div id="page-survey" class="page">
-        <div id="survey-selector" class="card">
-            <h2>เลือกแบบประเมิน</h2>
-            <button class="btn" onclick="initSurvey('phq9')">แบบคัดกรองโรคซึมเศร้า (PHQ-9)</button>
-            <button class="btn btn" onclick="initSurvey('gad7')" style="background:#5dade2">แบบวัดความวิตกกังวล (GAD-7)</button>
-            <button class="btn btn" onclick="initSurvey('eq')" style="background:#48c9b0">วัดความฉลาดทางอารมณ์ (EQ)</button>
-        </div>
-
-        <div id="survey-box" class="card hidden">
-            <div class="progress-bar"><div id="progress-fill"></div></div>
-            <h3 id="q-text">คำถาม</h3>
-            <div id="opt-list"></div>
-            <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">ข้อที่ <span id="q-curr">1</span> / <span id="q-total">0</span></p>
-        </div>
-
-        <div id="survey-result" class="card hidden">
-            <h2>ผลการประเมิน</h2>
-            <div id="res-score" style="font-size: 3rem; font-weight: bold; color: var(--blue-main);">0</div>
-            <h3 id="res-label">ปกติ</h3>
-            <p id="res-desc"></p>
-            <button class="btn" onclick="showPage('survey')">ทำแบบทดสอบอื่น</button>
-            <a href="tel:1323" class="btn" style="background:var(--danger); text-decoration:none;">สายด่วน 1323</a>
-        </div>
-    </div>
-
-    <div id="page-chat" class="page">
-        <div class="card" style="padding: 10px;">
-            <h3>พูดคุยกับน้องอารี 😊</h3>
-            <div class="chat-box">
-                <div id="chat-content">
-                    <div class="msg msg-bot">สวัสดีครับ ผมชื่ออารี ยินดีที่ได้เป็นเพื่อนคุยของคุณนะครับ วันนี้มีเรื่องอะไรอยากระบาย หรืออยากปรึกษาผมไหมครับ? พิมพ์มาได้เลยนะ!</div>
-                </div>
-                <div id="bot-typing" class="typing" style="margin-left: 20px;">น้องอารีกำลังพิมพ์...</div>
-                <div class="chat-input-area">
-                    <input type="text" id="chat-in" placeholder="พิมพ์ข้อความที่นี่..." onkeypress="if(event.key==='Enter') botTalk()">
-                    <button onclick="botTalk()" class="btn" style="margin:0 0 0 10px; padding:10px 20px;">ส่ง</button>
+    <div class="container">
+        
+        <section id="page-home" class="page active">
+            <div class="card hero">
+                <h1>อารีแคร์ (Are-Care)</h1>
+                <p class="hero-sub">ระบบประเมินสุขภาพจิตออนไลน์เบื้องต้น พร้อม AI Chatbot "น้องอารี" เพื่อดูแลใจคุณ</p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn btn-primary" onclick="showPage('features')">เริ่มทำแบบประเมิน</button>
+                    <button class="btn btn-outline" onclick="showPage('about')">รายละเอียดโปรเจค</button>
                 </div>
             </div>
-        </div>
+            <div class="warning">
+                <strong>คำเตือน:</strong> ผลลัพธ์นี้เป็นเพียงการคัดกรองเบื้องต้น ไม่สามารถใช้แทนคำวินิจฉัยของแพทย์ได้
+            </div>
+        </section>
+
+        <section id="page-about" class="page">
+            <div class="card">
+                <h2>เกี่ยวกับโปรเจค</h2>
+                <p style="margin-top: 1rem;"><strong>วัตถุประสงค์:</strong> เพื่อสร้างเครื่องมือออนไลน์ที่ช่วยให้บุคคลทั่วไปสามารถประเมินสภาวะทางอารมณ์ของตนเองได้เบื้องต้น ลดช่องว่างในการเข้าถึงบริการสุขภาพจิต</p>
+                <p style="margin-top: 1rem;"><strong>กลุ่มเป้าหมาย:</strong> นักเรียน นักศึกษา และบุคคลทั่วไปที่มีความเครียดหรือต้องการสำรวจสุขภาพจิตใจ</p>
+                <p style="margin-top: 1rem;"><strong>เทคโนโลยี:</strong> HTML5, CSS3, และ JavaScript (Static Website) รองรับการทำงานบน GitHub Pages 100%</p>
+            </div>
+        </section>
+
+        <section id="page-process" class="page">
+            <div class="card">
+                <h2>กระบวนการพัฒนา (Development Process)</h2>
+                
+                <div class="process-grid">
+                    <div class="step-card">
+                        <h4>1. Problem & Analysis</h4>
+                        <p>ศึกษาปัญหาความเครียดในปัจจุบันและคัดเลือกแบบสอบถาม PHQ-9 และ GAD-7</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>2. UI/UX Design</h4>
+                        <p>ออกแบบ Interface ให้ดูเป็นมิตร ใช้งานง่าย และรองรับมือถือ (Responsive)</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>3. Development</h4>
+                        <p>เขียนโค้ดด้วย Vanilla JavaScript เพื่อความเร็วและไม่ต้องพึ่งพา Backend</p>
+                    </div>
+                    <div class="step-card">
+                        <h4>4. Testing & Result</h4>
+                        <p>ทดสอบความถูกต้องของคะแนนและการโต้ตอบของ Chatbot</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-features" class="page">
+            <div class="card">
+                <h2>🧪 แบบประเมินสุขภาพจิต (PHQ-9)</h2>
+                <div id="survey-box" class="survey-box">
+                    <p id="question-text">คุณพร้อมที่จะประเมินสุขภาพจิตเบื้องต้นหรือยัง?</p>
+                    <div id="options-box" style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="startSurvey()">เริ่มแบบทดสอบ</button>
+                    </div>
+                </div>
+                <div id="survey-result" class="hidden" style="margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 1rem;">
+                    <h3 id="res-label" style="color: var(--primary);"></h3>
+                    <p id="res-desc"></p>
+                    <button class="btn btn-outline" style="margin-top: 1rem;" onclick="resetSurvey()">ทำใหม่อีกครั้ง</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>💬 คุยกับน้องอารี (AI Chatbot)</h2>
+                <div class="chat-window">
+                    <div class="chat-messages" id="chat-content">
+                        <div class="msg msg-bot">สวัสดีครับ ผมอารี ยินดีที่ได้คุยกับคุณนะ วันนี้มีเรื่องอะไรอยากระบายไหมครับ?</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="พิมพ์ข้อความที่นี่...">
+                        <button class="btn btn-primary" onclick="sendChat()">ส่ง</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-contact" class="page">
+            <div class="card" style="text-align: center;">
+                <h2>ผู้พัฒนาโปรเจค</h2>
+                <div class="process-grid" style="margin-top: 2rem;">
+                    <div class="card" style="box-shadow: none; border: 1px solid #eee;">
+                        <strong>นายพิภพ ย่างก้าวไกล</strong>
+                    </div>
+                    <div class="card" style="box-shadow: none; border: 1px solid #eee;">
+                        <strong>นายศุภกานต์ บุญแสง</strong>
+                    </div>
+                    <div class="card" style="box-shadow: none; border: 1px solid #eee;">
+                        <strong>นายสุทธิเทพ คำโขง</strong>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-soft);">วิทยาลัยการอาชีพเวียงเชียงรุ้ง | ปีการศึกษา 2568</p>
+                <a href="https://github.com" class="btn btn-outline" style="margin-top: 2rem;">ดู Source Code บน GitHub</a>
+            </div>
+        </section>
+
     </div>
-</div>
 
-<script>
-    // --- ระบบเปลี่ยนหน้า ---
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-links span').forEach(s => s.classList.remove('active'));
-        document.getElementById('page-' + pageId).classList.add('active');
-        document.getElementById('link-' + pageId).classList.add('active');
-        
-        // Reset survey state if leaving survey page
-        if(pageId !== 'survey') {
-            document.getElementById('survey-selector').classList.remove('hidden');
-            document.getElementById('survey-box').classList.add('hidden');
-            document.getElementById('survey-result').classList.add('hidden');
-        }
-    }
+    <footer class="footer">
+        &copy; 2026 Are-Care Project - วิทยาลัยการอาชีพเวียงเชียงรุ้ง
+    </footer>
 
-    // --- ข้อมูลแบบทดสอบ ---
-    const db = {
-        phq9: {
-            name: "แบบคัดกรองโรคซึมเศร้า",
-            questions: ["เบื่อ ทำอะไรก็ไม่เพลิดเพลิน", "ไม่สบายใจ ซึมเศร้า หรือท้อแท้", "หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป", "เหนื่อยง่าย หรือไม่ค่อยมีแรง", "เบื่ออาหาร หรือกินมากเกินไป", "รู้สึกไม่ดีกับตัวเอง ล้มเหลว หรือทำให้ครอบครัวผิดหวัง", "สมาธิไม่ดีเวลาทำอะไร", "พูดหรือทำอะไรช้าลงจนคนสังเกตเห็น หรือกระสับกระส่าย", "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"],
-            opts: ["ไม่มีเลย", "มีบางวัน", "มีบ่อย", "มีเกือบทุกวัน"],
-            calc: (s) => {
-                if(s <= 4) return {l: "ปกติ", d: "ยินดีด้วยครับ คุณไม่มีอาการซึมเศร้า"};
-                if(s <= 9) return {l: "ซึมเศร้าเล็กน้อย", d: "ควรหาเวลาพักผ่อนและทำกิจกรรมที่ผ่อนคลาย"};
-                if(s <= 14) return {l: "ซึมเศร้าปานกลาง", d: "ควรปรึกษาจิตแพทย์เพื่อรับคำแนะนำเบื้องต้น"};
-                return {l: "ซึมเศร้ารุนแรง", d: "แนะนำให้พบแพทย์ผู้เชี่ยวชาญโดยด่วนครับ"};
-            }
-        },
-        gad7: {
-            name: "แบบวัดความวิตกกังวล",
-            questions: ["รู้สึกกระสับกระส่าย กังวล หรือว้าวุ่นใจ", "ไม่สามารถหยุดหรือควบคุมความกังวลได้", "กังวลมากเกินไปในหลายๆ เรื่อง", "ผ่อนคลายได้ยาก", "รู้สึกกระวนกระวายจนนั่งไม่ติด", "กลายเป็นคนหงุดหงิดง่าย", "รู้สึกกลัวเหมือนจะมีอะไรที่น่ากลัวเกิดขึ้น"],
-            opts: ["ไม่มีเลย", "มีบางวัน", "มีบ่อย", "มีเกือบทุกวัน"],
-            calc: (s) => {
-                if(s <= 4) return {l: "ปกติ", d: "ระดับความวิตกกังวลของคุณอยู่ในเกณฑ์ปกติ"};
-                if(s <= 9) return {l: "วิตกกังวลเล็กน้อย", d: "ลองฝึกสมาธิหรือหายใจลึกๆ เพื่อช่วยผ่อนคลาย"};
-                return {l: "วิตกกังวลระดับสูง", d: "ควรปรึกษาผู้เชี่ยวชาญเพื่อรับฟังคำแนะนำ"};
-            }
-        }
-    };
+    <script>
+        /* --- JAVASCRIPT LOGIC --- */
 
-    let curS = null, curIdx = 0, totalS = 0;
-
-    function initSurvey(key) {
-        curS = db[key] || { questions: Array(15).fill("คำถาม EQ มาตรฐาน..."), opts: ["ไม่จริง", "จริงบางครั้ง", "จริงที่สุด"], calc: (s)=>({l:"ประเมิน EQ", d:"ขอบคุณที่ร่วมทดสอบครับ"}) };
-        curIdx = 0; totalS = 0;
-        document.getElementById('survey-selector').classList.add('hidden');
-        document.getElementById('survey-box').classList.remove('hidden');
-        document.getElementById('q-total').innerText = curS.questions.length;
-        renderQ();
-    }
-
-    function renderQ() {
-        document.getElementById('q-text').innerText = curS.questions[curIdx];
-        document.getElementById('q-curr').innerText = curIdx + 1;
-        const list = document.getElementById('opt-list');
-        list.innerHTML = '';
-        curS.opts.forEach((o, i) => {
-            const d = document.createElement('div');
-            d.className = 'opt-item';
-            d.innerText = o;
-            d.onclick = () => {
-                totalS += i;
-                if(++curIdx < curS.questions.length) renderQ();
-                else finishS();
-            };
-            list.appendChild(d);
-        });
-        document.getElementById('progress-fill').style.width = (curIdx / curS.questions.length * 100) + '%';
-    }
-
-    function finishS() {
-        document.getElementById('survey-box').classList.add('hidden');
-        document.getElementById('survey-result').classList.remove('hidden');
-        const res = curS.calc(totalS);
-        document.getElementById('res-score').innerText = totalS;
-        document.getElementById('res-label').innerText = res.l;
-        document.getElementById('res-desc').innerText = res.d;
-    }
-
-    // --- ระบบแชทบอทอัจฉริยะ ---
-    const responses = {
-        greet: ["สวัสดีครับ! วันนี้เป็นยังไงบ้างครับ?", "หวัดดีครับ ผมน้องอารีพร้อมรับฟังนะ", "ดีครับ! มีอะไรไม่สบายใจเล่ามาได้เลย"],
-        stress: ["ความเครียดเป็นเรื่องปกติครับ ลองพักสายตาสักครู่ไหม?", "สู้ๆ นะครับ วันนี้คุณเก่งมากแล้ว", "เหนื่อยก็พักบ้างนะ ผมอยู่ตรงนี้เสมอ"],
-        sad: ["ไม่เป็นไรนะที่จะรู้สึกเศร้า พิมพ์ระบายออกมาได้เลยครับ", "กอดปลอบนะครับ ทุกอย่างจะค่อยๆ ดีขึ้น", "ผมรับฟังคุณอยู่นะ ใจเย็นๆ นะครับ"],
-        help: ["ถ้าไม่สบายใจมาก ลองทำแบบประเมินในเมนูแบบทดสอบดูไหมครับ?", "เบื้องต้นลองโทร 1323 สายด่วนสุขภาพจิตดูนะ ฟรีครับ"],
-        unknown: ["ผมอาจจะยังไม่เข้าใจทั้งหมด แต่ผมยินดีรับฟังนะ พิมพ์มาอีกได้เลย", "อืมมม... เล่าต่อได้นะครับ ผมฟังอยู่", "เข้าใจเลยครับ แล้วเป็นยังไงต่อหรอ?"]
-    };
-
-    function botTalk() {
-        const input = document.getElementById('chat-in');
-        const text = input.value.trim();
-        if(!text) return;
-
-        addMsg(text, 'user');
-        input.value = '';
-        
-        const typing = document.getElementById('bot-typing');
-        typing.style.display = 'block';
-
-        setTimeout(() => {
-            typing.style.display = 'none';
-            let reply = "";
-            const t = text.toLowerCase();
+        // 1. Navigation Logic
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
             
-            if(t.includes("ดี") || t.includes("หวัดดี")) reply = rand(responses.greet);
-            else if(t.includes("เครียด") || t.includes("เหนื่อย")) reply = rand(responses.stress);
-            else if(t.includes("เศร้า") || t.includes("แย่")) reply = rand(responses.sad);
-            else if(t.includes("ช่วย") || t.includes("แนะนำ")) reply = rand(responses.help);
-            else reply = rand(responses.unknown);
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('link-' + pageId).classList.add('active');
+            window.scrollTo(0,0);
+        }
 
-            addMsg(reply, 'bot');
-        }, 1000);
-    }
+        // 2. Survey Logic (PHQ-9)
+        const questions = [
+            "เบื่อ ทำอะไรก็ไม่เพลิดเพลิน",
+            "ไม่สบายใจ ซึมเศร้า หรือท้อแท้",
+            "หลับยาก หรือหลับๆ ตื่นๆ หรือหลับมากไป",
+            "เหนื่อยง่าย หรือไม่ค่อยมีแรง",
+            "เบื่ออาหาร หรือกินมากเกินไป",
+            "รู้สึกไม่ดีกับตัวเอง ล้มเหลว หรือทำให้ครอบครัวผิดหวัง",
+            "สมาธิไม่ดีเวลาทำอะไร เช่น ดูทีวี หรือทำงาน",
+            "พูดหรือทำอะไรช้าลงจนคนสังเกตเห็น หรือกระสับกระส่าย",
+            "คิดทำร้ายตนเอง หรือคิดว่าถ้าตายไปคงจะดี"
+        ];
 
-    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-    function addMsg(text, sender) {
-        const content = document.getElementById('chat-content');
-        const div = document.createElement('div');
-        div.className = `msg msg-${sender}`;
-        div.innerText = text;
-        content.appendChild(div);
-        content.scrollTop = content.scrollHeight;
-    }
-</script>
+        let curIdx = 0;
+        let score = 0;
+
+        function startSurvey() {
+            curIdx = 0; score = 0;
+            document.getElementById('survey-result').classList.add('hidden');
+            document.getElementById('survey-box').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qText = document.getElementById('question-text');
+            const oBox = document.getElementById('options-box');
+            qText.innerHTML = `<strong>ข้อที่ ${curIdx + 1}:</strong> ${questions[curIdx]}`;
+            oBox.innerHTML = `
+                <button class="option-btn" onclick="nextQ(0)">ไม่มีเลย (0)</button>
+                <button class="option-btn" onclick="nextQ(1)">มีบางวัน (1)</button>
+                <button class="option-btn" onclick="nextQ(2)">มีบ่อย (2)</button>
+                <button class="option-btn" onclick="nextQ(3)">มีเกือบทุกวัน (3)</button>
+            `;
+        }
+
+        function nextQ(val) {
+            score += val;
+            if (++curIdx < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('survey-box').classList.add('hidden');
+            const res = document.getElementById('survey-result');
+            const label = document.getElementById('res-label');
+            const desc = document.getElementById('res-desc');
+            res.classList.remove('hidden');
+
+            if (score <= 4) { label.innerText = "ระดับปกติ ("+score+")"; desc.innerText = "คุณยังดูแข็งแรงดีนะ รักษาใจให้สดใสแบบนี้ต่อไปครับ"; }
+            else if (score <= 9) { label.innerText = "ซึมเศร้าเล็กน้อย ("+score+")"; desc.innerText = "ช่วงนี้อาจจะเหนื่อยๆ ลองหาเวลาพักผ่อนดูนะ"; }
+            else if (score <= 14) { label.innerText = "ซึมเศร้าปานกลาง ("+score+")"; desc.innerText = "ควรหาโอกาสระบายหรือปรึกษาผู้ที่ไว้วางใจ"; }
+            else { label.innerText = "ซึมเศร้ารุนแรง ("+score+")"; desc.innerText = "แนะนำให้พบจิตแพทย์หรือติดต่อสายด่วน 1323 โดยเร็วที่สุดครับ"; }
+        }
+
+        function resetSurvey() { startSurvey(); }
+
+        // 3. Chatbot Logic
+        const replies = {
+            "สวัสดี": ["สวัสดีครับ ผมน้องอารีนะ วันนี้เป็นยังไงบ้าง?", "หวัดดีจ้า! มีอะไรอยากระบายให้ฟังไหม?"],
+            "เหนื่อย": ["เหนื่อยก็พักบ้างนะ คุณเก่งมากแล้ว", "กอดปลอบนะ พักสักนิดแล้วค่อยเริ่มใหม่"],
+            "เครียด": ["ลองสูดหายใจลึกๆ ดูนะ ความเครียดมันจะค่อยๆ ผ่านไป", "ระบายออกมาได้เลย อารีพร้อมฟังครับ"],
+            "ขอบคุณ": ["ยินดีเสมอครับ ขอให้เป็นวันที่ดีนะ 😊"],
+            "default": ["อืมม ผมเข้าใจนะ เล่าต่อได้เลย", "ครับผม น้องอารีรับฟังอยู่จ้า"]
+        };
+
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const content = document.getElementById('chat-content');
+            const text = input.value.trim();
+            if(!text) return;
+
+            content.innerHTML += `<div class="msg msg-user">${text}</div>`;
+            input.value = "";
+
+            setTimeout(() => {
+                let botRes = replies["default"][Math.floor(Math.random()*replies["default"].length)];
+                for(let key in replies) {
+                    if(text.includes(key)) botRes = replies[key][Math.floor(Math.random()*replies[key].length)];
+                }
+                content.innerHTML += `<div class="msg msg-bot">${botRes}</div>`;
+                content.scrollTop = content.scrollHeight;
+            }, 600);
+        }
+
+        // Enter Key for Chat
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') sendChat();
+        });
+    </script>
 </body>
 </html>
