@@ -3,409 +3,939 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aree-Care | เพื่อนใจออนไลน์</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Valentine's Surprise for Ouan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600&family=Caveat:wght@700&family=Mitr:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-soft: #e3efff; 
-            --primary-light: #b8d8ff;
-            --primary-main: #6ca6ff;
-            --primary-deep: #4d8df1;
-            --accent-peach: #ffcfd2;
-            --bg-warm: #fdfbf7;
-            --bg-blue-soft: #f0f7ff; 
-            --text-dark: #2d3748;
-            --text-medium: #4a5568;
-            --text-light: #a0aec0;
-            --white: #ffffff;
-            --danger-soft: #fff5f5;
-            --danger-text: #c53030;
-            --glass: rgba(255, 255, 255, 0.8);
-            --card-shadow: 0 15px 35px rgba(108, 166, 255, 0.12);
+            --primary-pink: #ff85a1;
+            --deep-red: #ff4d6d;
+            --envelope-bg: #ffb3c1;
+            --envelope-dark: #ff8fa3;
+            --paper-bg: #fffbf0;
+            --text-pink-deep: #d63384;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: var(--bg-warm); 
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(184, 216, 255, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(255, 207, 210, 0.15) 0px, transparent 50%);
-            color: var(--text-dark); 
-            font-family: 'Sarabun', sans-serif;
+        body {
+            font-family: 'Anuphan', sans-serif;
+            background-color: #fff0f3;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            margin: 0;
+        }
+        .handwritten { font-family: 'Caveat', cursive; }
+        .title-font { font-family: 'Mitr', sans-serif; }
+
+        /* Background hearts (Global) */
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: moveUp 4s linear forwards;
+        }
+        
+        /* Balloon-like heart burst */
+        .burst-heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            animation: balloonRise var(--duration) ease-in-out forwards;
+            opacity: 0;
         }
 
-        h1, h2, h3, .logo { font-family: 'Mitr', sans-serif; font-weight: 500; }
-
-        .navbar {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            padding: 1.2rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(108, 166, 255, 0.1);
-        }
-        .logo { font-size: 1.6rem; color: var(--primary-deep); cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .logo-dot { width: 14px; height: 14px; background: var(--accent-peach); border-radius: 50%; box-shadow: 0 0 10px var(--accent-peach); }
-
-        .nav-links { display: flex; list-style: none; gap: 5px; }
-        .nav-links a { 
-            text-decoration: none; color: var(--text-medium); font-weight: 400; cursor: pointer; 
-            transition: 0.4s; padding: 10px 18px; border-radius: 50px; font-size: 0.95rem;
-            white-space: nowrap;
-        }
-        .nav-links a:hover, .nav-links a.active { 
-            color: var(--primary-deep); background: var(--primary-soft); 
-            box-shadow: 0 4px 12px rgba(108, 166, 255, 0.1);
+        @keyframes moveUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        .page { display: none; min-height: 80vh; padding: 4rem 5%; animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
-        .page.active { display: block; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        .container { max-width: 1200px; margin: 0 auto; }
-
-        .btn-main {
-            background: linear-gradient(135deg, var(--primary-main), var(--primary-deep));
-            color: white; border: none; padding: 18px 45px; border-radius: 50px;
-            font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: 0.4s;
-            box-shadow: 0 10px 25px rgba(108, 166, 255, 0.3);
-            display: inline-flex; align-items: center; gap: 10px;
-            white-space: nowrap;
-        }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(108, 166, 255, 0.4); }
-
-        .blue-section {
-            background-color: var(--bg-blue-soft);
-            border-radius: 3rem;
-            padding: 3rem 2rem;
-            border: 1px solid rgba(108, 166, 255, 0.1);
+        @keyframes balloonRise {
+            0% { transform: translate(-50%, 0) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translate(var(--drift-start), -30px) scale(1.2); }
+            50% { transform: translate(calc(var(--drift-start) * 1.5), -50vh) scale(1.1) rotate(10deg); }
+            100% { transform: translate(var(--drift-end), -115vh) scale(1) rotate(var(--tr)); opacity: 0; }
         }
 
-        .disclaimer-card {
-            background: var(--danger-soft);
-            border: 1px dashed var(--danger-text);
-            color: var(--danger-text);
-            padding: 1.5rem;
-            border-radius: 1.5rem;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Chat UI */
-        .chat-frame {
-            max-width: 1100px; margin: 0 auto; background: var(--white);
-            border-radius: 3rem; overflow: hidden; box-shadow: var(--card-shadow);
-            display: flex; flex-direction: column; height: 85vh;
+        .hidden-page {
+            display: none;
+            opacity: 0;
         }
-        .chat-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--primary-soft); display: flex; align-items: center; gap: 15px; background: var(--bg-blue-soft); }
-        .status-dot { width: 12px; height: 12px; background: #48bb78; border-radius: 50%; }
-        .chat-body { flex: 1; padding: 2.5rem; overflow-y: auto; background: #fcfdfe; display: flex; flex-direction: column; gap: 1.2rem; }
-        .bubble { padding: 16px 24px; border-radius: 2rem; max-width: 75%; font-size: 1.05rem; line-height: 1.5; }
-        .bubble-bot { background: var(--primary-soft); color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 5px; }
-        .bubble-user { background: var(--primary-main); color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
-        .chat-footer { padding: 1.5rem 2rem; background: white; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--primary-soft); }
-        .chat-input { 
-            flex: 1; background: #f7fafc; border: 2px solid transparent; 
-            padding: 14px 25px; border-radius: 50px; outline: none; transition: 0.3s; font-size: 1rem;
+
+        /* --- Envelope CSS --- */
+        .envelope-container {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 50px;
         }
-        .chat-input:focus { border-color: var(--primary-soft); background: white; }
 
-        /* Quiz UI */
-        .quiz-option {
-            background: var(--white); border: 2px solid var(--primary-soft); padding: 1.3rem 2rem;
-            border-radius: 1.5rem; margin-bottom: 0.8rem; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; gap: 15px; font-size: 1.1rem;
+        .envelope-wrapper {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: var(--envelope-bg);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.4s ease;
+            transform: translateY(50px);
         }
-        .quiz-option:hover { background: var(--primary-soft); border-color: var(--primary-main); transform: translateX(10px); }
 
-        .hero { text-align: center; padding: 6rem 1rem 5rem; background: linear-gradient(180deg, rgba(227, 239, 255, 0.4) 0%, transparent 100%); }
-        .hero h1 { font-size: 4.2rem; color: var(--primary-deep); margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -1px; }
-        .hero p { font-size: 1.4rem; color: var(--text-medium); margin-bottom: 2.5rem; font-weight: 300; max-width: 800px; margin: 0 auto 2.5rem; }
+        @media (min-width: 768px) {
+            .envelope-wrapper { width: 340px; height: 220px; }
+        }
 
-        .credit-list { text-align: left; margin-top: 2rem; border-top: 1px solid var(--primary-soft); padding-top: 2rem; }
-        .credit-item { margin-bottom: 1rem; font-size: 0.95rem; display: flex; align-items: flex-start; gap: 10px; }
-        .credit-label { font-weight: 600; color: var(--primary-deep); min-width: 140px; }
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 120px solid var(--envelope-dark);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            transform-origin: top;
+            transition: transform 0.5s ease, z-index 0.1s 0.2s;
+            z-index: 4;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+        }
+        @media (min-width: 768px) {
+            .flap { border-top-width: 150px; border-left-width: 170px; border-right-width: 170px; }
+        }
 
-        footer { text-align: center; padding: 4rem 2rem; color: var(--text-light); border-top: 1px solid var(--primary-soft); }
+        .pockets {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            border-top: 90px solid transparent;
+            border-left: 140px solid var(--envelope-bg);
+            border-right: 140px solid var(--envelope-bg);
+            border-bottom: 90px solid var(--envelope-bg);
+            border-radius: 12px;
+        }
+        @media (min-width: 768px) {
+            .pockets { border-top-width: 110px; border-left-width: 170px; border-right-width: 170px; border-bottom-width: 110px; }
+        }
 
-        @media (max-width: 768px) {
-            .chat-frame { height: 80vh; }
-            .hero h1 { font-size: 2.8rem; }
-            .nav-links { display: none; }
+        .letter {
+            position: absolute;
+            bottom: 5px;
+            left: 5%;
+            width: 90%;
+            height: 90%;
+            background: var(--paper-bg);
+            z-index: 2;
+            transition: transform 0.5s ease, height 0.5s ease, z-index 0s 0.25s;
+            padding: 10px 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.03);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+
+        .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.open .letter { transform: translateY(-40%); height: 115%; z-index: 5; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+        .wax-seal {
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            width: 40px; height: 40px; background: #d00000; border-radius: 50%; z-index: 10;
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 16px; box-shadow: 0 3px 8px rgba(0,0,0,0.2); transition: opacity 0.3s ease;
+        }
+        .envelope-wrapper.open .wax-seal { opacity: 0; pointer-events: none; }
+
+        .pass-input { letter-spacing: 0.5em; text-align: center; font-size: 1.5rem; }
+        
+        .letter-content {
+            font-size: 0.7rem; line-height: 1.1; color: var(--text-pink-deep);
+            display: flex; flex-direction: column; gap: 1px; width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .letter-content { font-size: 0.85rem; line-height: 1.25; gap: 3px; }
+        }
+        
+        .letter-header { color: var(--text-pink-deep); font-weight: bold; font-size: 0.75rem; margin-bottom: 0.2rem; }
+
+        .letter-footer-link {
+            color: #fff; background: var(--deep-red); padding: 4px 12px; border-radius: 20px;
+            font-weight: bold; font-size: 0.8rem; margin-top: 0.5rem; cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .envelope-label {
+            position: absolute; bottom: 15px; right: 20px; z-index: 15; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .envelope-wrapper.open .envelope-label { opacity: 0; }
+
+        /* --- Page 3: Pink Dive Styles --- */
+        #page-3-pink {
+            position: fixed; inset: 0; 
+            background: linear-gradient(45deg, #ff0a54, #ff477e, #ff7096, #ff85a1);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite; 
+            z-index: 500;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 2s ease-in-out; overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .white-heart {
+            position: absolute; top: -50px; color: white; pointer-events: none; z-index: 501;
+            animation: fall linear forwards; opacity: 0.8; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .page3-text {
+            font-size: 1.5rem !important; margin-bottom: 2.5rem !important;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        @media (min-width: 768px) { .page3-text { font-size: 2.25rem !important; } }
+
+        .dive-btn-sm {
+            position: relative; z-index: 600; background: white; color: #ff0a54; padding: 10px 28px; 
+            border-radius: 40px; font-weight: 700; font-size: 1rem; box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border: 2px solid #ff0a54; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
+        }
+
+        #noButtonSm {
+            position: relative; z-index: 600; background: rgba(0, 0, 0, 0.4); color: white; font-weight: 600;
+            padding: 8px 20px; font-size: 0.85rem; border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px); transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s ease;
+        }
+
+        /* --- Page 4: Digging Game Styles --- */
+        .dig-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+            max-width: 400px; margin: 0 auto;
+        }
+        .dig-item {
+            aspect-ratio: 1/1; background: #ffe5ec; border-radius: 1.5rem;
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 4px solid white; box-shadow: 0 4px 10px rgba(255, 133, 161, 0.2); position: relative;
+        }
+        .dig-item:hover { transform: scale(1.05); background: #ffc2d1; }
+        .dig-item.dug { background: white; cursor: default; transform: scale(0.95); border-color: #ff85a1; }
+        .message-reveal {
+            position: fixed; bottom: 15%; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: white; padding: 20px;
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease; z-index: 100;
+        }
+        .message-reveal.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+        /* --- Next Button in Page 4 --- */
+        #nextToPage5 {
+            position: fixed; bottom: 20px; right: 20px; z-index: 200;
+            background: #ff4d6d; color: white; font-weight: 600; padding: 10px 20px;
+            border-radius: 30px; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            transition: all 0.3s ease; opacity: 0; pointer-events: none;
+        }
+        #nextToPage5.active { opacity: 1; pointer-events: auto; animation: bounceRight 1.5s infinite; }
+
+        @keyframes bounceRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* --- Page 5: Rearrange Words Styles --- */
+        #scratch-page {
+            display: none; opacity: 0; transition: opacity 1s ease-in-out;
+            min-height: 100vh; background: #fff0f3; padding: 2rem 1rem;
+            flex-direction: column; align-items: center;
+        }
+        
+        .word-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            width: 100%; max-width: 450px; margin-bottom: 2rem;
+        }
+
+        .scratch-box-p5 {
+            position: relative; aspect-ratio: 1/1; background: white; border-radius: 1rem;
+            overflow: hidden; border: 2px solid #ff85a1; box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .scratch-canvas-p5 {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20; cursor: crosshair; touch-action: none;
+        }
+
+        .word-behind {
+            font-size: 1.2rem; font-weight: bold; color: #ff4d6d; z-index: 10;
+        }
+
+        .inventory-area {
+            width: 100%; max-width: 450px; min-height: 60px; background: rgba(255, 255, 255, 0.5);
+            border: 2px dashed #ffb3c1; border-radius: 1rem; padding: 10px;
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 1rem;
+        }
+
+        .answer-input-area {
+            width: 100%; max-width: 450px; min-height: 80px; background: white;
+            border: 2px solid #ff85a1; border-radius: 1.5rem; padding: 15px;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            transition: border-color 0.3s ease;
+        }
+
+        .word-chip {
+            background: #ff4d6d; color: white; padding: 8px 16px; border-radius: 20px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); user-select: none;
+        }
+        .word-chip:hover { transform: scale(1.05); background: #ff758f; }
+        .word-chip:active { transform: scale(0.95); }
+
+        .chip-in-answer {
+            background: white; color: #ff4d6d; border: 1.5px solid #ff4d6d;
+        }
+
+        .victory-msg {
+            margin-top: 2rem; text-align: center; display: none;
+        }
+
+        .error-msg {
+            color: #d00000; font-weight: bold; margin-top: 10px; opacity: 0; transition: opacity 0.3s ease;
+        }
+
+        .victory-glow {
+            animation: textGlow 1s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px #fff, 0 0 10px #ff4d6d; transform: scale(1); }
+            to { text-shadow: 0 0 10px #fff, 0 0 20px #ff4d6d; transform: scale(1.1); }
+        }
+
+        /* --- Page 6: Final Message Styles --- */
+        #final-page {
+            display: none; opacity: 0; transition: opacity 1.5s ease;
+            min-height: 100vh; background: #fff0f3; padding: 2rem;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+        }
+        .floating-photo {
+            width: 260px; 
+            background: white; border: 12px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); transform: rotate(-3deg);
+            margin-bottom: 2rem; border-radius: 4px; overflow: hidden;
+            animation: floatPhoto 4s ease-in-out infinite;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 200px;
+        }
+        .floating-photo img {
+            width: 100%; height: auto; display: block;
+        }
+        @keyframes floatPhoto {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        /* --- Final Shower Overlay --- */
+        .shower-heart {
+            position: fixed;
+            top: -100px;
+            z-index: 3000;
+            pointer-events: none;
+            animation: heartFall var(--fall-duration) linear forwards;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.2));
+        }
+        @keyframes heartFall {
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 1; transform: translateY(10vh) rotate(30deg) scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-    <nav class="navbar">
-        <div class="logo" onclick="showPage('home')">
-            <div class="logo-dot"></div> Aree-Care
+    <div id="heart-container"></div>
+
+    <!-- PAGE 1: LOGIN -->
+    <section id="login-page" class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card p-8 md:p-12 rounded-[2rem] shadow-2xl max-w-md w-full text-center border-2 border-pink-200">
+            <div class="text-5xl mb-6">🔒</div>
+            <h2 class="title-font text-2xl font-bold text-red-600 mb-2">พื้นที่สำหรับคนพิเศษ</h2>
+            <p class="text-gray-500 mb-8">กรุณาใส่รหัสผ่านเพื่อเข้าสู่หัวใจ...</p>
+            <div class="mb-8 text-left">
+                <label class="block text-sm font-medium text-pink-600 mb-4 text-center">เรารู้จักกันวันแรกคือวันที่เท่าไหร่? (ววดดปป)</label>
+                <input type="password" id="password" maxlength="6" inputmode="numeric" placeholder="••••••" class="pass-input w-full bg-white border-2 border-pink-200 rounded-2xl py-4 focus:outline-none focus:border-red-400 transition-all text-red-500 font-bold">
+                <p id="error-msg" class="text-red-500 text-sm mt-3 hidden text-center">รหัสผิดนะอ้วน ลองนึกดูดีๆ ซิ! 🥺</p>
+            </div>
+            <button onclick="checkPassword()" class="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition">เปิดกล่องความลับ ✨</button>
         </div>
-        <ul class="nav-links">
-            <li><a onclick="showPage('home')" id="link-home" class="active">หน้าแรก</a></li>
-            <li><a onclick="showPage('surveys')" id="link-surveys">ประเมินใจ</a></li>
-            <li><a onclick="showPage('chat')" id="link-chat">คุยกับน้องอารี</a></li>
-            <li><a onclick="showPage('library')" id="link-library">คลังวิดีโอ</a></li>
-            <li><a onclick="showPage('process')" id="link-process">เกี่ยวกับเรา</a></li>
-        </ul>
-    </nav>
+    </section>
 
-    <!-- Page Home -->
-    <div id="page-home" class="page active" style="padding-top: 0;">
-        <div class="hero">
-            <h1>ให้เราดูแล "ใจ" <br>ของคุณนะ</h1>
-            <p>Aree-Care... พื้นที่ปลอดภัยออนไลน์ ที่พร้อมรับฟังและช่วยคัดกรองสภาวะจิตใจของคุณด้วยความเข้าใจและเอื้ออารี</p>
-            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                <button class="btn-main" onclick="showPage('surveys')">คัดกรองตัวเอง ✨</button>
-                <button style="background: white; border: 2px solid var(--primary-light); padding: 16px 40px; border-radius: 50px; cursor: pointer; font-weight: 500; color: var(--primary-deep);" onclick="showPage('chat')">ปรึกษา AI น้องอารี</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Page Chat -->
-    <div id="page-chat" class="page">
-        <div class="container">
-            <div class="chat-frame">
-                <div class="chat-header">
-                    <div class="status-dot"></div>
-                    <div style="font-weight: 600;">น้องอารี (Aree-Care AI) 👩🏻</div>
-                </div>
-                <div id="chat-box" class="chat-body">
-                    <div class="bubble bubble-bot">สวัสดีค่ะ ยินดีที่ได้พบคุณนะคะ วันนี้มีเรื่องอะไรที่ทำให้ไม่สบายใจ หรือมีอะไรอยากเล่าให้น้องอารีฟังไหมคะ? หนูอยู่ตรงนี้เพื่อรับฟังคุณเสมอค่ะ 😊</div>
-                </div>
-                <div class="chat-footer">
-                    <input type="text" id="chat-input" class="chat-input" placeholder="คุยกับน้องอารี..." onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button class="btn-main" onclick="sendMessage()" style="padding: 10px 25px;">ส่ง</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Page Surveys -->
-    <div id="page-surveys" class="page">
-        <div class="container">
-            <div class="disclaimer-card">
-                <strong>⚠️ คำเตือน (Disclaimer):</strong> แบบประเมินนี้เป็นเพียงเครื่องมือคัดกรองเบื้องต้นเท่านั้น ไม่สามารถใช้แทนการวินิจฉัยโดยแพทย์หรือผู้เชี่ยวชาญได้ หากคุณมีความคิดที่จะทำร้ายตัวเองหรือต้องการความช่วยเหลือเร่งด่วน กรุณาติดต่อสายด่วนสุขภาพจิต 1323 ทันทีค่ะ
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <h2 style="font-size: 2.5rem; color: var(--primary-deep);">ประเมินความรู้สึก</h2>
-                <p>เลือกแบบทดสอบที่คุณต้องการเช็กในวันนี้ค่ะ ข้อมูลทั้งหมดจะเป็นความลับ</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                <div class="blue-section" style="padding: 2.5rem; cursor: pointer; text-align: center; background: white; box-shadow: var(--card-shadow);" onclick="startQuiz('PHQ9')">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌦️</div>
-                    <h3>ภาวะซึมเศร้า (PHQ-9)</h3>
-                </div>
-                <div class="blue-section" style="padding: 2.5rem; cursor: pointer; text-align: center; background: white; box-shadow: var(--card-shadow);" onclick="startQuiz('GAD7')">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌪️</div>
-                    <h3>ความวิตกกังวล (GAD-7)</h3>
-                </div>
-                <div class="blue-section" style="padding: 2.5rem; cursor: pointer; text-align: center; background: white; box-shadow: var(--card-shadow);" onclick="startQuiz('BURNOUT')">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
-                    <h3>ภาวะหมดไฟ (Burnout)</h3>
-                </div>
-                <div class="blue-section" style="padding: 2.5rem; cursor: pointer; text-align: center; background: white; box-shadow: var(--card-shadow);" onclick="startQuiz('ST5')">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">🧠</div>
-                    <h3>ความเครียด (ST-5)</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Page Quiz View -->
-    <div id="page-quiz-view" class="page">
-        <div class="container" style="max-width: 800px;">
-            <div id="quiz-content" class="blue-section">
-                <h2 id="q-text" style="text-align: center; margin-bottom: 2.5rem; font-size: 1.5rem;"></h2>
-                <div id="q-options"></div>
-            </div>
-            <div id="result-view" style="display:none; text-align: center; background: white; padding: 4rem; border-radius: 3rem; box-shadow: var(--card-shadow);">
-                <div id="res-icon" style="font-size: 5rem; margin-bottom: 1rem;"></div>
-                <h2 id="res-title" style="color: var(--primary-deep);"></h2>
-                <p id="res-desc" style="margin: 1.5rem 0 2.5rem; line-height: 1.6;"></p>
-                <button class="btn-main" onclick="showPage('surveys')">ทำแบบทดสอบอื่น</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Page Library -->
-    <div id="page-library" class="page">
-        <div class="container">
-            <h2 style="text-align: center; margin-bottom: 3rem; color: var(--primary-deep);">ฮีลใจผ่านวิดีโอ 📺</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-                <div class="blue-section" style="padding: 1rem; background: white;">
-                    <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 1.5rem; overflow: hidden;">
-                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube.com/embed/OFPVXCj0UsI"></iframe>
+    <!-- PAGE 2: ENVELOPE -->
+    <section id="envelope-page" class="hidden-page relative z-10 min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="envelope-container" id="burst-origin">
+            <div class="envelope-wrapper" id="mainEnvelope" onclick="toggleEnvelope(event)">
+                <div class="flap"></div>
+                <div class="pockets"></div>
+                <div class="wax-seal">❤️</div>
+                <div class="envelope-label handwritten text-pink-700 text-xl md:text-2xl">To: คนพิเศษ</div>
+                <div class="letter">
+                    <p class="letter-header">ถึง: คนอ้วนที่สุดในโลก</p>
+                    <div class="letter-content handwritten">
+                        <span>อ้วนบุ๋มๆ สุขสันต์วันแห่งความรักนะคะ</span>
+                        <span>ขอให้มีความสุขมากๆนะ</span>
+                        <span>ที่ผ่านมาพี่อาจไม่ดีนัก</span>
+                        <span>อาจทำแบบที่อ้วนต้องการไม่ได้</span>
+                        <span>อาจไม่โรแมนติก แต่พี่รักอ้วนมากๆเลยนะ</span>
+                        <span>รักกันแบบนี้ไปนานๆนะคะ จุ๊บๆ 😘</span>
                     </div>
-                    <p style="padding: 15px; font-weight: 600; text-align: center;">วิธีรับมือกับความเครียด</p>
-                </div>
-                <div class="blue-section" style="padding: 1rem; background: white;">
-                    <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 1.5rem; overflow: hidden;">
-                        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://www.youtube.com/embed/v0yvu-59DM"></iframe>
-                    </div>
-                    <p style="padding: 15px; font-weight: 600; text-align: center;">สมาธิบำบัด 5 นาที</p>
+                    <div class="letter-footer-link handwritten" onclick="goToPage3()">กดนี่ดูสิ</div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Page About Us -->
-    <div id="page-process" class="page">
-        <div class="container" style="max-width: 850px;">
-            <div class="blue-section" style="background: white; text-align: center; padding: 4rem 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1.5rem;">🌟</div>
-                <h2 style="color: var(--primary-deep); margin-bottom: 1rem;">เกี่ยวกับ Aree-Care</h2>
-                <p style="line-height: 1.8; color: var(--text-medium); margin-bottom: 2rem;">โครงการ อารีแคร์ (Aree-Care) พัฒนาโดยนักศึกษา วิทยาลัยการอาชีพเวียงเชียงรุ้ง <br> เพื่อเป็นพื้นที่ปลอดภัยสำหรับการดูแลสุขภาพใจเบื้องต้นในยุคดิจิทัล</p>
-                
-                <div class="credit-list">
-                    <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">แหล่งอ้างอิงและขอขอบคุณ (Credits)</h3>
-                    
-                    <div class="credit-item">
-                        <span class="credit-label">แบบประเมินสุขภาพจิต:</span>
-                        <span>กรมสุขภาพจิต กระทรวงสาธารณสุข (PHQ-9, GAD-7, ST-5)</span>
-                    </div>
-                    
-                    <div class="credit-item">
-                        <span class="credit-label">สื่อวิดีโอเพื่อการเรียนรู้:</span>
-                        <span>ขอขอบคุณเนื้อหาคุณภาพจากช่อง YouTube 
-                            <br>• Mahidol Channel
-                            <br>• กรมสุขภาพจิต
-                        </span>
-                    </div>
-
-                    <div class="credit-item" style="margin-top: 1rem; font-style: italic; color: var(--text-light);">
-                        <span>*ระบบนี้จัดทำขึ้นเพื่อการศึกษาและการคัดกรองเบื้องต้นเท่านั้น</span>
-                    </div>
-                </div>
+    <!-- PAGE 3: PINK DIVE -->
+    <section id="page-3-pink">
+        <div id="rain-container" class="absolute inset-0 pointer-events-none"></div>
+        <div class="text-center px-6 relative z-10">
+            <h3 class="title-font page3-text font-bold text-white drop-shadow-lg">อ้วนรักพี่จี่มั้ย😛</h3>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <button onclick="acceptLoveFromPage3()" class="dive-btn-sm">รักที่สุดดด! ✨</button>
+                <button id="noButtonSm" onmouseover="moveButton()" onclick="moveButton()">ไม่รักหหรอก แบร่!</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <footer>
-        <p>โปรเจค Aree-Care | วิทยาลัยการอาชีพเวียงเชียงรุ้ง</p>
-    </footer>
+    <!-- PAGE 4: DIGGING GAME -->
+    <section id="main-content" class="hidden-page relative z-10 py-16 px-4">
+        <header class="text-center mb-10">
+            <div class="text-red-500 text-5xl mb-4 animate-bounce">⛏️💖</div>
+            <h1 class="title-font text-3xl md:text-5xl font-bold text-red-600 mb-2">ขุดหาหัวใจพี่จี่</h1>
+            <p class="text-lg text-pink-500 handwritten">ลองขุดกล่องพวกนี้ดูสิ มีความลับซ่อนอยู่...</p>
+        </header>
+
+        <div class="dig-grid" id="dig-grid">
+            <!-- Items will be generated by JS -->
+        </div>
+
+        <div id="message-display" class="message-reveal handwritten text-2xl text-pink-600">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div id="final-surprise" class="hidden mt-12 text-center glass-card p-8 rounded-[2rem] max-w-lg mx-auto border-4 border-dashed border-pink-400 mb-20">
+            <h2 class="title-font text-2xl font-bold text-red-600 mb-4">ขุดจนเจอความจริง...</h2>
+            <p class="text-gray-700 leading-relaxed mb-6">
+                ไม่ว่าจะขุดเจออะไร ความจริงอย่างเดียวที่มีคือ... <br>
+                <span class="text-3xl text-pink-600 font-bold handwritten">พี่จี่รักอ้วนมากๆ นะคะ!</span> <br>
+                ขอบคุณที่อยู่ด้วยกันมานะคนดี 💖
+            </p>
+            <div class="text-5xl">👩‍❤️‍👨</div>
+        </div>
+
+        <button id="nextToPage5" onclick="goToPage5()">ไปต่อกันเถอะ ➔</button>
+    </section>
+
+    <!-- PAGE 5: REARRANGE GAME -->
+    <section id="scratch-page">
+        <div class="text-center mb-8">
+            <h2 class="title-font text-3xl font-bold text-red-600">ขุดให้เจอแล้วเรียงคำ 💖</h2>
+            <p class="text-pink-500 mt-2 font-medium">ขุดหาคำและ ❤️ แล้วนำมาเรียงประโยคที่ถูกต้องนะอ้วน</p>
+        </div>
+
+        <div class="word-grid" id="word-grid-p5">
+            <!-- Word Scratch Boxes -->
+        </div>
+
+        <div class="w-full max-w-md text-center">
+            <label class="text-xs font-bold text-pink-400 uppercase tracking-widest mb-2 block">คลังคำที่ขุดเจอ</label>
+            <div class="inventory-area" id="p5-inventory">
+                <!-- Found words appear here -->
+            </div>
+        </div>
+
+        <div class="w-full max-w-md text-center mt-4">
+            <label class="text-xs font-bold text-red-400 uppercase tracking-widest mb-2 block">เรียงประโยคบอกรักที่นี่ (กดที่คำเพื่อเอาออก)</label>
+            <div class="answer-input-area" id="p5-answer">
+                <!-- Rearrange area -->
+            </div>
+            <p id="p5-error-text" class="error-msg">ไม่ถูกต้องนะอ้วน ลองเรียงใหม่ซิ! 🥺</p>
+        </div>
+
+        <div id="p5-victory" class="victory-msg">
+            <div class="text-6xl mb-4">🥰💝✨</div>
+            <h3 class="title-font text-3xl font-bold text-red-600 victory-glow">ถูกต้องที่สุดดด!</h3>
+            <p id="p5-final-text" class="text-pink-600 mt-2 handwritten text-2xl">พี่จี่รักดอกหญ้าที่สุดในโลกเลยนะ</p>
+            <button onclick="goToPage6()" class="mt-8 bg-pink-500 text-white px-10 py-3 rounded-full font-bold shadow-lg flex items-center gap-2 mx-auto">ต่อไป ➔</button>
+        </div>
+    </section>
+
+    <!-- PAGE 6: FINAL MESSAGE -->
+    <section id="final-page">
+        <div class="floating-photo" id="final-photo-container">
+            <!-- รูปภาพที่อัปโหลดมา จะถูกใส่ด้วย JS -->
+        </div>
+        <h2 class="title-font text-4xl font-bold text-red-600 mb-6">Happy Valentine's Day</h2>
+        <div class="glass-card p-8 rounded-[2rem] max-w-lg mx-auto border-2 border-pink-200">
+            <p class="text-xl text-gray-700 leading-relaxed handwritten">
+                ขอบคุณที่อ้วนเกิดมาให้พี่ได้รัก <br>
+                ขอบคุณที่มาเป็นความสุขของกันและกัน <br>
+                จะดูแลอ้วนให้ดีที่สุด เท่าที่พี่คนนี้จะทำได้เลย <br>
+                รักดอกหญ้าที่สุดในโลกเลย! <br>
+                <span class="text-3xl text-red-500 mt-4 block font-bold">จี่&ดอกหญ้า ❤️</span>
+            </p>
+        </div>
+        <button id="endGameBtn" onclick="finishGame()" class="mt-10 bg-white text-pink-500 border-2 border-pink-200 px-8 py-3 rounded-full hover:bg-pink-50 transition font-bold text-lg shadow-sm">จบบริบูรณ์ ✨</button>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/70 hidden z-[1000] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl">
+            <div class="text-7xl mb-6">🎉💖</div>
+            <h2 class="text-3xl font-bold text-red-600 mb-4 title-font">รู้แล้วว่ารักกกก!</h2>
+            <p class="mb-6 text-gray-500">ไปเล่นเกมขุดหาความลับกันต่อเลยจ้า</p>
+            <button onclick="closeModal()" class="bg-pink-500 text-white w-full py-4 rounded-2xl font-bold shadow-lg">ลุยเลย! ⛏️</button>
+        </div>
+    </div>
 
     <script>
-        // API Key จากผู้ใช้งาน
-        const apiKey = "AIzaSyBxTVS8zk2j_Me2eIyN1Ys5yX6xhIxvAfs";
-        const systemPrompt = "คุณคือน้องอารี AI เพื่อนใจออนไลน์ อ่อนโยน เป็นมิตร พูดภาษาไทยที่สุภาพ ใช้แทนตัวว่า 'หนู' หรือ 'น้องอารี' ลงท้ายด้วย 'ค่ะ' หรือ 'นะคะ' เสมอ รับฟังและให้กำลังใจผู้ใช้โดยไม่ตัดสิน";
+        const apiKey = ""; 
+        let burstHappened = false;
+        let rainInterval = null;
+        let dugCount = 0;
+        const totalItems = 9;
 
-        function showPage(pId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            document.getElementById('page-' + pId).classList.add('active');
-            const link = document.getElementById('link-' + pId);
-            if(link) link.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        // รูปภาพของคุณถูกประมวลผลเป็น Base64 หรือ URL ภายในระบบ
+        // เนื่องจากไฟล์ท้องถิ่นเปิดไม่ได้ เราจึงใช้วิธีเรียกผ่าน placeholder หรือระบบสื่อสาร
+        // ในที่นี้เราจะใช้รูปที่แสดงถึงความรักที่คุณต้องการ
+        const userImageSrc = "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop"; 
+        
+        // หมายเหตุ: หากต้องการใช้รูปเดิมของคุณเป๊ะๆ ในสภาพแวดล้อมนี้ 
+        // แนะนำให้ฝากรูปไว้ที่เว็บฝากรูปแล้วเอา URL มาใส่แทนครับ 
+        // หรือใช้รูปที่ระบบ AI เข้าใจจากประวัติการแชท
 
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if(!msg) return;
-            addBubble(msg, 'user');
-            input.value = '';
-            const tid = 'bot-' + Date.now();
-            addBubble('...', 'bot', tid);
-            
-            try {
-                // Implementing exponential backoff and retry
-                let responseText = "";
-                let delay = 1000;
-                for (let i = 0; i < 5; i++) {
-                    try {
-                        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ 
-                                contents: [{ parts: [{ text: msg }] }], 
-                                systemInstruction: { parts: [{ text: systemPrompt }] } 
-                            })
-                        });
-                        if (!r.ok) throw new Error("Retry needed");
-                        const d = await r.json();
-                        responseText = d.candidates?.[0]?.content?.parts?.[0]?.text || "น้องอารีขอโทษนะคะ ระบบขัดข้องนิดหน่อยค่ะ";
-                        break;
-                    } catch (err) {
-                        if (i === 4) throw err;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        delay *= 2;
-                    }
-                }
-                document.getElementById(tid).innerText = responseText;
-            } catch(e) {
-                document.getElementById(tid).innerText = "ขออภัยนะคะ เชื่อมต่อระบบไม่ได้ค่ะ กรุณาลองตรวจสอบ API Key หรือลองใหม่ภายหลังนะคะ";
+        const messages = [
+            "รักอ้วนที่สุด ❤️", "คนดีของพี่จี่ 💖", "ห้ามดื้อนะอ้วน ✨",
+            "จุ๊บๆ หนึ่งที 😘", "น่ารักขึ้นทุกวันเลย 🥰", "อ้วนพุงนิ่ม 🐷",
+            "อยากอยู่ด้วยกันตลอดไปนะ 👩‍❤️‍👨", "วันนี้สวยจังเลย (จริงๆ นะ) 🌹", "เจ้าหญิงของพี่จี่ 👑"
+        ];
+
+        // Page 5 Data
+        const secretWords = ["พี่", "จี่", "รัก", "ดอก", "หญ้า", "ที่", "สุด", "❤️"];
+        const targetStr1 = "พี่จี่รักดอกหญ้าที่สุด❤️";
+
+        let foundWords = []; 
+        let userSequence = []; 
+
+        function checkPassword() {
+            if (document.getElementById('password').value === "240568") {
+                document.getElementById('login-page').style.display = 'none';
+                const envPage = document.getElementById('envelope-page');
+                envPage.style.display = 'flex';
+                setTimeout(() => envPage.style.opacity = '1', 50);
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+                document.getElementById('password').value = "";
             }
         }
 
-        function addBubble(text, sender, id = '') {
-            const box = document.getElementById('chat-box');
-            const div = document.createElement('div');
-            div.className = `bubble bubble-${sender}`;
-            if(id) div.id = id;
-            div.innerText = text;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        const quizData = {
-            'PHQ9': {
-                questions: ["เบื่อ ทำอะไรก็ไม่เพลิดเพลิน", "ไม่สบายใจ ซึมเศร้า หรือท้อแท้", "หลับยาก หรือหลับมากเกินไป", "เหนื่อยง่าย ไม่ค่อยมีแรง", "เบื่ออาหาร หรือกินมากเกินไป", "รู้สึกไม่ดีกับตัวเอง เช่น ล้มเหลว", "สมาธิไม่ดีเวลาทำอะไร", "พูดหรือทำอะไรช้าลงจนคนสังเกตเห็น", "คิดทำร้ายตัวเอง หรือคิดว่าตายไปคงจะดี"],
-                options: ["ไม่เลย", "มีบางวัน", "มีบ่อย", "เกือบทุกวัน"],
-                calc: (s) => (s >= 10 ? {icon:"⛈️", title:"คุณกำลังเจอช่วงที่หนักหนานะคะ", desc:"คะแนนระบุว่าคุณอาจมีความเสี่ยงภาวะซึมเศร้า ลองหาเวลาปรึกษาผู้เชี่ยวชาญหรือโทร 1323 นะคะ น้องอารีเป็นห่วงค่ะ"} : {icon:"☀️", title:"ใจคุณยังสดใสดีค่ะ", desc:"รักษาสุขภาพใจให้แข็งแรงแบบนี้ต่อไปนะคะ ทานอาหารอร่อยๆ และนอนหลับให้เพียงพอนะ"})
-            },
-            'GAD7': {
-                questions: ["รู้สึกกระสับกระส่าย หงุดหงิดง่าย", "ไม่สามารถหยุดความกังวลได้", "กังวลมากเกินไปในเรื่องต่างๆ", "ทำใจให้ผ่อนคลายได้ยาก", "วุ่นวายใจจนนั่งนิ่งไม่ได้", "กลายเป็นคนขี้ตกใจหรือตื่นกลัว", "กลัวว่าจะมีเรื่องร้ายแรงเกิดขึ้น"],
-                options: ["ไม่เลย", "มีบางวัน", "มีบ่อย", "เกือบทุกวัน"],
-                calc: (s) => (s >= 8 ? {icon:"🌪️", title:"คุณมีความกังวลค่อนข้างสูงค่ะ", desc:"ลองฝึกหายใจลึกๆ และพยายามหาเวลาพักผ่อนนะคะ"} : {icon:"🧘", title:"จิตใจของคุณยังมั่นคงดีค่ะ", desc:"คุณจัดการความวิตกกังวลได้ดีมากค่ะ หมั่นฝึกสมาธิสม่ำเสมอนะคะ"})
-            },
-            'BURNOUT': {
-                questions: ["รู้สึกเหนื่อยล้าทางอารมณ์จากการทำงาน/เรียน", "รู้สึกหมดพลังเมื่อคิดถึงสิ่งที่ต้องทำในวันถัดไป", "รู้สึกเย็นชากับคนรอบข้างหรือสิ่งที่เคยชอบ", "รู้สึกว่าความสามารถในการทำงานลดลง", "รู้สึกว่าสิ่งที่ทำอยู่ไม่มีความหมาย"],
-                options: ["ไม่เคย", "นานๆ ครั้ง", "บ่อยครั้ง", "ทุกวัน"],
-                calc: (s) => (s >= 10 ? {icon:"🔥", title:"คุณเริ่มมีภาวะหมดไฟแล้วค่ะ", desc:"ลองหาเวลาหยุดพักสั้นๆ หรือเปลี่ยนสภาพแวดล้อมดูนะคะ น้องอารีอยากให้คุณใจดีกับตัวเองให้มากค่ะ"} : {icon:"🌱", title:"ไฟในตัวคุณยังสว่างดีอยู่ค่ะ", desc:"คุณรักษาสมดุลชีวิตได้ดีมากค่ะ หมั่นเติมพลังใจด้วยสิ่งที่ชอบสม่ำเสมอนะคะ"})
-            },
-            'ST5': {
-                questions: ["มีปัญหาการนอน", "สมาธิจดจ่อลดน้อยลง", "หงุดหงิด/กระวนกระวาย", "รู้สึกเบื่อ เซ็ง", "ไม่อยากพบปะผู้คน"],
-                options: ["แทบไม่มี", "เป็นบางครั้ง", "บ่อยครั้ง", "เป็นประจำ"],
-                calc: (s) => (s >= 8 ? {icon:"🧠", title:"ระดับความเครียดค่อนข้างสูงค่ะ", desc:"หาเวลาพักผ่อน วางเรื่องที่กังวลลงบ้างนะคะ การฟังเพลงหรือเดินเล่นช่วยได้เยอะเลยค่ะ"} : {icon:"🍃", title:"ความเครียดอยู่ในระดับปกติค่ะ", desc:"ดีมากเลยค่ะ คุณมีการจัดการอารมณ์ที่ดี อย่าลืมหาความสุขเล็กๆ น้อยๆ นะคะ"})
+        function burstHearts() {
+            if (burstHappened) return;
+            burstHappened = true;
+            const origin = document.getElementById('burst-origin');
+            for (let i = 0; i < 35; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('burst-heart');
+                heart.innerText = ['❤️', '💖', '💘', '💕', '✨'][Math.floor(Math.random() * 5)];
+                const duration = (Math.random() * 3 + 7) + 's'; 
+                const driftStart = (Math.random() - 0.5) * 450 + 'px';
+                const driftEnd = (Math.random() - 0.5) * 700 + 'px';
+                const tr = (Math.random() * 60 - 30) + 'deg'; 
+                heart.style.setProperty('--duration', duration);
+                heart.style.setProperty('--drift-start', driftStart);
+                heart.style.setProperty('--drift-end', driftEnd);
+                heart.style.setProperty('--tr', tr);
+                heart.style.left = '50%'; heart.style.top = '45%';
+                heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                origin.appendChild(heart);
+                setTimeout(() => heart.remove(), 12000);
             }
-        };
-
-        let currentSet = null, qIdx = 0, qScore = 0;
-        function startQuiz(key) {
-            currentSet = quizData[key]; qIdx = 0; qScore = 0;
-            document.getElementById('quiz-content').style.display = 'block';
-            document.getElementById('result-view').style.display = 'none';
-            showPage('quiz-view');
-            renderQuestion();
         }
 
-        function renderQuestion() {
-            document.getElementById('q-text').innerText = currentSet.questions[qIdx];
-            const optBox = document.getElementById('q-options');
-            optBox.innerHTML = '';
-            currentSet.options.forEach((text, i) => {
-                const div = document.createElement('div');
-                div.className = 'quiz-option';
-                div.innerText = text;
-                div.onclick = () => { qScore += i; qIdx++; if(qIdx < currentSet.questions.length) renderQuestion(); else showResult(); };
-                optBox.appendChild(div);
+        function toggleEnvelope(event) {
+            const env = document.getElementById('mainEnvelope');
+            if (event.target.classList.contains('letter-footer-link')) return;
+            if (!env.classList.contains('open')) {
+                env.classList.add('open');
+                setTimeout(burstHearts, 50);
+            } else {
+                env.classList.remove('open');
+            }
+        }
+
+        function createWhiteHeartRain() {
+            const container = document.getElementById('rain-container');
+            const heart = document.createElement('div');
+            heart.classList.add('white-heart');
+            heart.innerText = '🤍';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }
+
+        function goToPage3() {
+            const envPage = document.getElementById('envelope-page');
+            const page3 = document.getElementById('page-3-pink');
+            envPage.style.transition = 'opacity 1s ease-in-out';
+            envPage.style.opacity = '0';
+            setTimeout(() => {
+                envPage.style.display = 'none';
+                page3.style.display = 'flex';
+                setTimeout(() => {
+                    page3.style.opacity = '1';
+                    if (!rainInterval) rainInterval = setInterval(createWhiteHeartRain, 200);
+                }, 100);
+            }, 1000);
+        }
+
+        function acceptLoveFromPage3() {
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            const page3 = document.getElementById('page-3-pink');
+            const mainContent = document.getElementById('main-content');
+            if (rainInterval) { clearInterval(rainInterval); rainInterval = null; }
+            page3.style.opacity = '0';
+            setTimeout(() => {
+                page3.style.display = 'none';
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    initDigGame();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 50);
+            }, 500);
+        }
+
+        function initDigGame() {
+            const grid = document.getElementById('dig-grid');
+            grid.innerHTML = '';
+            dugCount = 0;
+            const shuffled = [...messages].sort(() => Math.random() - 0.5);
+            for (let i = 0; i < totalItems; i++) {
+                const item = document.createElement('div');
+                item.classList.add('dig-item');
+                item.innerText = '🎁';
+                item.onclick = () => dig(item, shuffled[i]);
+                grid.appendChild(item);
+            }
+        }
+
+        function dig(el, msg) {
+            if (el.classList.contains('dug')) return;
+            el.classList.add('dug');
+            el.innerText = '💝';
+            dugCount++;
+            const display = document.getElementById('message-display');
+            display.innerText = msg;
+            display.classList.add('show');
+            for(let i=0; i<5; i++) { createParticleAt(el); }
+            if (dugCount === totalItems) {
+                setTimeout(() => {
+                    document.getElementById('final-surprise').classList.remove('hidden');
+                    document.getElementById('nextToPage5').classList.add('active');
+                }, 1000);
+            }
+            setTimeout(() => {
+                if (display.innerText === msg) display.classList.remove('show');
+            }, 2500);
+        }
+
+        function goToPage5() {
+            const mainContent = document.getElementById('main-content');
+            const scratchPage = document.getElementById('scratch-page');
+            mainContent.style.opacity = '0';
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                scratchPage.style.display = 'flex';
+                setTimeout(() => { 
+                    scratchPage.style.opacity = '1'; 
+                    initPage5();
+                }, 100);
+            }, 1000);
+        }
+
+        function initPage5() {
+            const grid = document.getElementById('word-grid-p5');
+            grid.innerHTML = '';
+            foundWords = [];
+            userSequence = [];
+            updateInventoryUI();
+            updateAnswerUI();
+            document.getElementById('p5-victory').style.display = 'none';
+            document.getElementById('p5-error-text').style.opacity = '0';
+
+            const shuffled = [...secretWords].sort(() => Math.random() - 0.5);
+            shuffled.forEach((word) => {
+                const box = document.createElement('div');
+                box.className = 'scratch-box-p5';
+                const wordEl = document.createElement('div');
+                wordEl.className = 'word-behind';
+                wordEl.innerText = word;
+                box.appendChild(wordEl);
+                const canvas = document.createElement('canvas');
+                canvas.className = 'scratch-canvas-p5';
+                box.appendChild(canvas);
+                grid.appendChild(box);
+                setupScratchP5(canvas, word);
             });
         }
 
-        function showResult() {
-            document.getElementById('quiz-content').style.display = 'none';
-            document.getElementById('result-view').style.display = 'block';
-            const res = currentSet.calc(qScore);
-            document.getElementById('res-icon').innerText = res.icon;
-            document.getElementById('res-title').innerText = res.title;
-            document.getElementById('res-desc').innerText = res.desc;
+        function setupScratchP5(canvas, word) {
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width || 100;
+            canvas.height = rect.height || 100;
+            ctx.fillStyle = '#ff4d6d';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ขูดตรงนี้', canvas.width/2, canvas.height/2 + 5);
+
+            let isDrawing = false;
+            let collected = false;
+
+            function scratch(e) {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                const x = (e.clientX || (e.touches ? e.touches[0].clientX : 0)) - r.left;
+                const y = (e.clientY || (e.touches ? e.touches[0].clientY : 0)) - r.top;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (!collected) {
+                    const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+                    let blank = 0;
+                    for(let i=3; i<pixels.length; i+=4) if(pixels[i] === 0) blank++;
+                    if (blank > (canvas.width * canvas.height * 0.4)) {
+                        collected = true;
+                        canvas.style.transition = 'opacity 0.5s';
+                        canvas.style.opacity = '0';
+                        setTimeout(() => {
+                            canvas.remove();
+                            addWordToInventory(word);
+                        }, 500);
+                    }
+                }
+            }
+            canvas.addEventListener('mousedown', () => isDrawing = true);
+            canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); }, {passive:false});
+            window.addEventListener('mouseup', () => isDrawing = false);
+            window.addEventListener('touchend', () => isDrawing = false);
+            canvas.addEventListener('mousemove', scratch);
+            canvas.addEventListener('touchmove', (e) => { scratch(e); e.preventDefault(); }, {passive:false});
+        }
+
+        function addWordToInventory(word) {
+            foundWords.push(word);
+            updateInventoryUI();
+            createParticleAt(document.getElementById('p5-inventory'));
+        }
+
+        function updateInventoryUI() {
+            const inv = document.getElementById('p5-inventory');
+            inv.innerHTML = '';
+            let tempUserSeq = [...userSequence];
+            foundWords.forEach((word) => {
+                const usedIndex = tempUserSeq.indexOf(word);
+                if (usedIndex > -1) {
+                    tempUserSeq.splice(usedIndex, 1);
+                } else {
+                    const chip = document.createElement('div');
+                    chip.className = 'word-chip';
+                    chip.innerText = word;
+                    chip.onclick = () => addToAnswer(word);
+                    inv.appendChild(chip);
+                }
+            });
+        }
+
+        function addToAnswer(word) {
+            userSequence.push(word);
+            updateInventoryUI();
+            updateAnswerUI();
+            checkVictoryP5();
+        }
+
+        function removeFromAnswer(index) {
+            userSequence.splice(index, 1);
+            updateInventoryUI();
+            updateAnswerUI();
+            checkVictoryP5(); 
+        }
+
+        function updateAnswerUI() {
+            const area = document.getElementById('p5-answer');
+            area.innerHTML = '';
+            userSequence.forEach((word, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip chip-in-answer';
+                chip.innerText = word;
+                chip.onclick = () => removeFromAnswer(index);
+                area.appendChild(chip);
+            });
+            area.style.borderColor = '#ff85a1';
+            area.classList.remove('victory-glow');
+        }
+
+        function checkVictoryP5() {
+            const currentStr = userSequence.join('');
+            const errorText = document.getElementById('p5-error-text');
+            const area = document.getElementById('p5-answer');
+
+            if (userSequence.length < secretWords.length) {
+                errorText.style.opacity = '0';
+                area.style.borderColor = '#ff85a1';
+            }
+
+            if (currentStr === targetStr1) {
+                document.getElementById('p5-victory').style.display = 'block';
+                area.classList.add('victory-glow');
+                area.style.borderColor = '#22c55e';
+                errorText.style.opacity = '0';
+                const footerText = document.getElementById('p5-final-text');
+                footerText.innerText = "พี่จี่รักดอกหญ้าที่สุดในโลกเลยนะ ❤️";
+                for(let i=0; i<60; i++) setTimeout(createHeart, i * 80);
+            } else if (userSequence.length === secretWords.length) {
+                errorText.style.opacity = '1';
+                area.style.borderColor = '#d00000';
+            }
+        }
+
+        function goToPage6() {
+            const page5 = document.getElementById('scratch-page');
+            const finalPage = document.getElementById('final-page');
+            
+            // แทรกรูปภาพลงใน container
+            const photoContainer = document.getElementById('final-photo-container');
+            photoContainer.innerHTML = `<img src="${userImageSrc}" alt="Our Love Memory" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop';">`;
+
+            page5.style.opacity = '0';
+            setTimeout(() => {
+                page5.style.display = 'none';
+                finalPage.style.display = 'flex';
+                setTimeout(() => {
+                    finalPage.style.opacity = '1';
+                    for(let i=0; i<20; i++) setTimeout(createHeart, i * 200);
+                }, 100);
+            }, 1000);
+        }
+
+        function finishGame() {
+            const btn = document.getElementById('endGameBtn');
+            btn.disabled = true;
+            btn.innerText = "รักที่สุด ❤️";
+
+            const heartVarieties = ['❤️', '💖', '💝', '💕', '💗', '💓', '💘', '✨', '🌸', '🌹'];
+            
+            const showerInterval = setInterval(() => {
+                for(let i=0; i<3; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('shower-heart');
+                    heart.innerText = heartVarieties[Math.floor(Math.random() * heartVarieties.length)];
+                    heart.style.left = (Math.random() * 110 - 5) + 'vw';
+                    heart.style.fontSize = (Math.random() * 40 + 30) + 'px';
+                    heart.style.setProperty('--fall-duration', (Math.random() * 1.5 + 1.5) + 's');
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 3500);
+                }
+            }, 30);
+
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.inset = '0';
+            overlay.style.backgroundColor = '#fff0f3';
+            overlay.style.zIndex = '2500';
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 3s ease';
+            overlay.style.pointerEvents = 'none';
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => { overlay.style.opacity = '1'; }, 1000);
+
+            setTimeout(() => {
+                clearInterval(showerInterval);
+                location.reload();
+            }, 5000);
+        }
+
+        function createParticleAt(el) {
+            const rect = el.getBoundingClientRect();
+            const p = document.createElement('div');
+            p.innerText = '✨';
+            p.style.position = 'fixed';
+            p.style.left = (rect.left + rect.width/2) + 'px';
+            p.style.top = (rect.top + rect.height/2) + 'px';
+            p.style.pointerEvents = 'none';
+            p.style.zIndex = '200';
+            p.style.transition = 'all 0.8s ease-out';
+            document.body.appendChild(p);
+            setTimeout(() => {
+                p.style.transform = `translate(${(Math.random()-0.5)*100}px, ${(Math.random()-0.5)*100}px) scale(0)`;
+                p.style.opacity = '0';
+            }, 50);
+            setTimeout(() => p.remove(), 1000);
+        }
+
+        function createHeart() {
+            const container = document.getElementById('heart-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerText = ['❤️', '💖', '✨', '🌹'][Math.floor(Math.random()*4)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+        setInterval(createHeart, 1500);
+
+        function moveButton() {
+            const btn = document.getElementById('noButtonSm');
+            const padding = 80;
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            const newLeft = Math.random() * (winWidth - (btn.offsetWidth + (padding * 2))) + padding;
+            const newTop = Math.random() * (winHeight - (btn.offsetHeight + (padding * 2))) + padding;
+            btn.style.position = 'fixed';
+            btn.style.left = `${newLeft}px`; btn.style.top = `${newTop}px`;
+            btn.style.transform = `rotate(${(Math.random() * 20 - 10)}deg)`;
         }
     </script>
 </body>
